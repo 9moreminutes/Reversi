@@ -29,7 +29,9 @@ void GameEngine::drawBoard(){
 }
 
 void GameEngine::undoMove(){
+    
     board = undo;
+    
 }
 
 bool GameEngine::checkDirection(int row, int column, int xdirec, int ydirec, Tile enemycolor){
@@ -125,6 +127,8 @@ void GameEngine::makeMove(Space s, Tile player){
     //make copy of current board in case of undo
     board = undo;
     
+    int xstart = s.getRow();
+    int ystart = s.getColumn();
     
     int x = s.getRow();
     int y = s.getColumn();
@@ -139,6 +143,9 @@ void GameEngine::makeMove(Space s, Tile player){
             //keep going through space in same direction
             goThroughSpaces(i, &x, &y);
         }
+        //after going through each space in one direction, go back to start
+        x = xstart;
+        y = ystart;
     }
 }
 
