@@ -160,7 +160,7 @@ void GameEngine::makeMove(Space s, Tile player){
 }
 
 //go through each space in a specified direction
-void GameEngine::goThroughSpaces(int i, int *x, int *y){
+void GameEngine::goThroughSpaces(int i, int &x, int &y){
     switch (i) {
             //check right
         case 0:

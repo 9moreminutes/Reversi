@@ -49,7 +49,7 @@ public:
     }
     
     void makeMove(Space s, Tile player);
-    void goThroughSpaces(int i, int *x, int *y);
+    void goThroughSpaces(int i, int &x, int &y);
     bool checkIfValid(Space s, Tile player);
     void move(Space s, Tile Player);
     void undoMove(); // pops move from stack and undoes
