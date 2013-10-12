@@ -147,6 +147,11 @@ void GameEngine::makeMove(Space s, Tile player){
         x = xstart;
         y = ystart;
     }
+    
+    while (!moves.empty()){
+        Space newmove = popMove();
+        //update board vector with newmove
+    }
 }
 
 //go through each space in a specified direction
