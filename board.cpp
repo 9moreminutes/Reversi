@@ -137,6 +137,7 @@ void GameEngine::makeMove(Space s, Tile player){
     for (int i = 0; i < 8; i++) {
         //move once in direction
         goThroughSpaces(i, &x, &y);
+        //keep going until you hit the other piece.
         while (board[x][y].getTile() != player){
             //push space onto stack as player tile
             pushMove(Space(player, x, y));
@@ -148,9 +149,13 @@ void GameEngine::makeMove(Space s, Tile player){
         y = ystart;
     }
     
+    //update board
+    board[s.getRow()][s.getColumn()] = s; //place move
+    //flip tiles
     while (!moves.empty()){
         Space newmove = popMove();
         //update board vector with newmove
+        board[newmove.getRow()][newmove.getColumn()] = newmove;
     }
 }
 
