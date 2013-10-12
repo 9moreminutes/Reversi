@@ -28,6 +28,10 @@ void GameEngine::drawBoard(){
 	}
 }
 
+void GameEngine::undoMove(){
+    board = undo;
+}
+
 bool GameEngine::checkDirection(int row, int column, int xdirec, int ydirec, Tile enemycolor){
 	Space z = Space(enemycolor, 0, 0);
 	z = board[row][column];
@@ -65,6 +69,7 @@ bool GameEngine::checkIfValid(Space s, Tile player){
 		cout << "Entered nonexisting player type, Bad entry" << endl;
 		return false;
 	}
+    
 	
 	int r = s.getRow()+1;
 	int c = s.getColumn()+1;
@@ -107,8 +112,77 @@ bool GameEngine::checkIfValid(Space s, Tile player){
 	}
 	//cout << "Row is " << r << endl;
 	//cout << "Column is " << c << endl;
-	
-	
+}
+
+
+//flip tiles and update the board
+void GameEngine::makeMove(Space s, Tile player){
+    //check if valid move
+    if (!checkIfValid(s, player)){
+        return; //do nothing.
+    }
+    
+    //make copy of current board in case of undo
+    board = undo;
+    
+    
+    int x = s.getRow();
+    int y = s.getColumn();
+    
+    //traverse each direction (8 in total) from the desired move
+    for (int i = 0; i < 8; i++) {
+        //move once in direction
+        goThroughSpaces(i, &x, &y);
+        while (board[x][y].getTile() != player){
+            //push space onto stack as player tile
+            pushMove(Space(player, x, y));
+            //keep going through space in same direction
+            goThroughSpaces(i, &x, &y);
+        }
+    }
+}
+
+//go through each space in a specified direction
+void GameEngine::goThroughSpaces(int i, int *x, int *y){
+    switch (i) {
+            //check right
+        case 0:
+            ++x;
+            break;
+            //check left
+        case 1:
+            --x;
+            break;
+            //check up
+        case 2:
+            ++y;
+            break;
+            //check down
+        case 3:
+            --y;
+            break;
+            //check diagonal right up
+        case 4:
+            ++x;
+            ++y;
+            break;
+            //check diagonal left up
+        case 5:
+            --x;
+            ++y;
+            break;
+            //check diagonal right down
+        case 6:
+            ++x;
+            --y;
+            break;
+            //check diagonal left down
+        case 7:
+            --x;
+            --y;
+        default:
+            break;
+    }
 }
 
 vector <Space> GameEngine::showPossibleMoves(Tile player){

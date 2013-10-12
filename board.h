@@ -15,6 +15,8 @@ private:
     
     stack <Space> moves;
     
+    vector <vector <Space> > undo;
+    
 public:
     //constructor, initializes board
     GameEngine(){
@@ -46,10 +48,11 @@ public:
         moves.push(s);
     }
     
-    
+    void makeMove(Space s, Tile player);
+    void goThroughSpaces(int i, int *x, int *y);
     bool checkIfValid(Space s, Tile player);
     void move(Space s, Tile Player);
-    void undo(); // pops move from stack and undoes
+    void undoMove(); // pops move from stack and undoes
     vector<Space> showPossibleMoves(Tile player); //if empty, no moves
     int tallyPoints();
     void resetGame();
