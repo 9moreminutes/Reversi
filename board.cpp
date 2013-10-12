@@ -76,36 +76,49 @@ bool GameEngine::checkIfValid(Space s, Tile player){
 	int r = s.getRow()+1;
 	int c = s.getColumn()+1;
 	bool test;
+    
+    //stores which directions are valid
+    //clear before push back
+    directions.clear();
+    
 	if(checkDirection(r, c, 0, -1, enemy)){
 	//	cout << "Good Move Up" << endl;
+        directions.push_back(3);
 		return true;
 	}
 	else if(checkDirection(r, c, 0, 1, enemy)){
 	//	cout << "Good Move Down" << endl;
+        directions.push_back(2);
 		return true;
 	}
 	else if(checkDirection(r, c, -1, 0, enemy)){
 	//	cout << "Good Move Left" << endl;
+        directions.push_back(1);
 		return true;
 	}	
 	else if(checkDirection(r, c, 1, 0, enemy)){
 		//cout << "Good Move Right" << endl;
+        directions.push_back(0);
 		return true;
 	}
 	else if(checkDirection(r, c, 1, 1, enemy)){
 		//cout << "Good Move Down Right" << endl;
+        directions.push_back(4);
 		return true;
 	}
 	else if(checkDirection(r, c, 1, -1, enemy)){
 	//	cout << "Good Move Up Right" << endl;
+        directions.push_back(6);
 		return true;
 	}
 	else if(checkDirection(r, c, -1, 1, enemy)){
 	//	cout << "Good Move Down Left" << endl;
+        directions.push_back(5);
 		return true;
 	}
 	else if(checkDirection(r, c, -1, -1, enemy)){
 	//	cout << "Good Move Down Right" << endl;
+        directions.push_back(7);
 		return true;
 	}
 	else{
@@ -133,16 +146,17 @@ void GameEngine::makeMove(Space s, Tile player){
     int x = s.getRow();
     int y = s.getColumn();
     
-    //traverse each direction (8 in total) from the desired move
-    for (int i = 0; i < 8; i++) {
+    //traverse each direction  from the desired move
+    for (int i = 0; i < directions.size(); i++) {
         //move once in direction
-        goThroughSpaces(i, &x, &y);
+        int currentdirection = directions[i];
+        goThroughSpaces(currentdirection, x, y);
         //keep going until you hit the other piece.
         while (board[x][y].getTile() != player){
             //push space onto stack as player tile
             pushMove(Space(player, x, y));
             //keep going through space in same direction
-            goThroughSpaces(i, &x, &y);
+            goThroughSpaces(currentdirection, x, y);
         }
         //after going through each space in one direction, go back to start
         x = xstart;
@@ -166,37 +180,46 @@ void GameEngine::goThroughSpaces(int i, int &x, int &y){
         case 0:
             ++x;
             break;
+            
             //check left
         case 1:
             --x;
             break;
-            //check up
+            
+            //check down
         case 2:
             ++y;
             break;
-            //check down
+            
+            //check up
         case 3:
             --y;
             break;
-            //check diagonal right up
+            
+            //check diagonal right down
         case 4:
             ++x;
             ++y;
             break;
-            //check diagonal left up
+            
+            //check diagonal left down
         case 5:
             --x;
             ++y;
             break;
-            //check diagonal right down
+            
+            //check diagonal right up
         case 6:
             ++x;
             --y;
             break;
-            //check diagonal left down
+            
+            //check diagonal left up
         case 7:
             --x;
             --y;
+            break;
+            
         default:
             break;
     }

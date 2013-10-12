@@ -17,6 +17,8 @@ private:
     
     vector <vector <Space> > undo;
     
+    vector <int> directions; //holds which of the 8 directions are valid
+    
 public:
     //constructor, initializes board
     GameEngine(){
