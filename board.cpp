@@ -129,6 +129,11 @@ bool GameEngine::checkIfValid(Space s, Tile player){
 	//cout << "Column is " << c << endl;
 }
 
+bool GameEngine::isOnBoard(int row, int column){
+    if ( row < 0 || row > 7 || column < 0 || column > 8) return false;
+    else return true;
+}
+
 
 //flip tiles and update the board
 void GameEngine::makeMove(Space s, Tile player){
