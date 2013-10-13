@@ -2,6 +2,7 @@
 
 Server::Server() {
     diff = Difficulty::EASY;
+    started = false;
 
     //make connection socket
     connSock = socket(AF_INET, SOCK_STREAM, 0);
@@ -57,7 +58,17 @@ bool Server::isValid(string command) {
         return true;
     }
 
-    return checkMove(command) || checkStart();
+    return checkMove(command) || checkStart(command);
+}
+
+bool Server::checkMove(string command) {
+    return (command.length() == 3) && 
+           ((command[3] > 64 && command[3] < 73) || (command[3] > 96 && command[3] < 105)) && 
+           (command[3] > 48 && command[3] < 57);
+}
+
+bool Server::checkStart(string command) {
+    return false;
 }
 
 void Server::waitForConnection() {
@@ -83,9 +94,26 @@ void Server::handleCommand() {
             return;
         }
     }
-    
+
+    if (command == "EASY" || command == "MEDIUM" || command == "HARD") {
+        if (command == "EASY") {
+            diff = EASY;
+            write(gameSock,"OK",2);
+            return;
+        }
+        if (command == "MEDIUM") {
+            diff = MEDIUM;
+            write(gameSock,"OK",2);
+            return;
+        }
+        diff = HARD;
+        write(gameSock,"OK",2);
+        return;
+    }
+
     if (checkMove(command)) {
-        
+        write(gameSock,"YOU MADE A MOVE",2);
+        return;
     }
 }
 

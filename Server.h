@@ -24,6 +24,7 @@ private:
     Tile playerColor,
          aiColor;
     Difficulty diff;
+    bool started;
 
     int connSock, gameSock, port, msgSize, clilen;
     char buffer[64];
@@ -34,6 +35,8 @@ private:
     void handleMove(Row, Column);
     void handleUndo();
     bool isValid(string);
+    bool checkMove(string);
+    bool checkStart(string);
 
 public:
     Server();
