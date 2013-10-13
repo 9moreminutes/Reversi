@@ -19,8 +19,9 @@ private:
          aiColor;
     Difficulty diff;
 
-    int sock;
+    int sock, port, msgSize;
     char[64] buffer;
+    struct sockaddr_in client, server;
 
     /* Functions *************/
     void handleStart(string);
