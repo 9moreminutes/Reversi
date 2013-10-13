@@ -1,5 +1,5 @@
-#ifndef _board_h
-#define _board_h
+#ifndef _board_h_
+#define _board_h_
 
 #include <vector>
 #include <stack>

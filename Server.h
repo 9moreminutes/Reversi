@@ -3,7 +3,13 @@
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
+#include <errno.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string>
+#include <string.h>
 #include "Space.h"
 #include "board.h"
 
@@ -19,8 +25,8 @@ private:
          aiColor;
     Difficulty diff;
 
-    int sock, port, msgSize;
-    char[64] buffer;
+    int connSock, gameSock, port, msgSize, clilen;
+    char buffer[64];
     struct sockaddr_in client, server;
 
     /* Functions *************/
@@ -31,8 +37,8 @@ private:
 public:
     Server();
     ~Server();
-
-    void handleCommand();
+    void waitForConnection();
+    void handleCommand(char*);
 };
 
 #endif

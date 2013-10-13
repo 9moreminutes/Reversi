@@ -249,10 +249,10 @@ vector <Space> GameEngine::showPossibleMoves(Tile player){
     return result;
 }
 
-int main(){
-    Tile tile = WHITE;
+//int main(){
+   // Tile tile = WHITE;
     //Tile test = opposite(tile);
-    GameEngine g = GameEngine();
+   // GameEngine g = GameEngine();
     //cout << "Test is " << test << endl;
     /*Space s = Space(tile, 3, 5);
     Space s2 = Space(tile, 4, 5);
@@ -304,8 +304,8 @@ int main(){
     else{
         cout << "Bad Move" << endl;
     }*/
-    g.showPossibleMoves(WHITE);
-    g.drawBoard(); 
-    return 0;
+   // g.showPossibleMoves(WHITE);
+   // g.drawBoard(); 
+   // return 0;
     
-}
+//}

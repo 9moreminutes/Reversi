@@ -1,3 +1,7 @@
+#ifndef _space_h_
+#define _space_h_ 
+
+
 #include <stdlib.h>
 #include <vector>
 
@@ -76,7 +80,8 @@ class Space{
                 break;
             }
         }
-        
+        Space(Row r, Column c, Tile t) : row(r), column(c), tile(t) { };
+
         Tile getTile(){
             return tile;
         }
@@ -98,3 +103,5 @@ class Space{
             column = c;
         }
 };
+
+#endif
