@@ -249,6 +249,26 @@ vector <Space> GameEngine::showPossibleMoves(Tile player){
     return result;
 }
 
+void GameEngine::resetGame() {
+    board.clear();
+    for(int i = 1; i <= 8; ++i){
+        vector<Space> columns;
+        board.push_back(columns);
+        for(int j = 1; j <= 8; ++j){
+            if((i == 4 && j == 5) || (i == 5 && j ==4)){
+                Space s = Space(WHITE, i, j);
+                board[i-1].push_back(s);
+            }else if(((i == 4 && j == 4) || (i == 5 && j == 5))){
+                Space s = Space(BLACK, i, j);
+                board[i-1].push_back(s);
+            }else {
+                Space s = Space(EMPTY, i, j);
+                board[i-1].push_back(s);
+            }
+        }
+    }
+}
+
 //int main(){
    // Tile tile = WHITE;
     //Tile test = opposite(tile);

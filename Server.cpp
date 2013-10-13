@@ -1,6 +1,8 @@
 #include "Server.h"
 
 Server::Server() {
+    diff = Difficulty::EASY;
+
     //make connection socket
     connSock = socket(AF_INET, SOCK_STREAM, 0);
     if (connSock < 0) {
@@ -27,10 +29,35 @@ Server::~Server() {
 
 }
 
-void Server::handleCommand(char * c) {
-    //convert char[] to string
-    //string command(c);
+void Server::handleStart(string s) {
+    playerColor = Tile::WHITE;
+    aiColor = Tile::BLACK;
+    game.resetGame();
+}
 
+void Server::handleMove(Row r, Column c) {
+    //Make player move
+    game.makeMove(Space(r,c,playerColor),playerColor);
+
+    //Make AI move
+    game.makeMove(Space(r,c,aiColor),aiColor);
+}
+
+void Server::handleUndo() {
+    game.undoMove();
+}
+
+bool Server::isValid(string command) {
+    if (command == "UNDO" || 
+        command == "DISPLAY" || 
+        command == "EXIT" ||
+        command == "EASY" ||
+        command == "MEDIUM" ||
+        command == "HARD") {
+        return true;
+    }
+
+    return checkMove(command) || checkStart();
 }
 
 void Server::waitForConnection() {
@@ -40,28 +67,41 @@ void Server::waitForConnection() {
         perror("Error accepting connection");
     write(gameSock,"WELCOME", 7);
 }
-void Server::handleStart(string s) {
-    ////playerColor = Tile::WHITE;
-    //aiColor = Tile::BLACK;
-    //game.resetGame();
+
+void Server::handleCommand() {
+    //convert char[] to string
+    string command(buffer);
+
+    //make sure command is valid
+    if (!isValid(command)) {
+        write(gameSock,"ILLEGAL",7);
+    }
+
+    if (!started) {
+        if (!checkStart(command)) {
+            write(gameSock,"ILLEGAL",7);
+            return;
+        }
+    }
+    
+    if (checkMove(command)) {
+        
+    }
 }
 
-void Server::handleMove(Row r, Column c) {
-    //Make player move
-    //game.makeMove(Space(r,c,playerColor));
-
-    //Make AI move
-    //game.makeMove(Space(r,c,aiColor));
-}
-
-void Server::handleUndo() {
-    //game.undoMove();
+void Server::getCommand() {
+    bzero(buffer, 256);
+    read(gameSock, buffer, 256);
 }
 
 int main(int argc, char const *argv[])
 {
     Server server;
     server.waitForConnection();
+    while(true) {
+        server.getCommand();
+        server.handleCommand();
+    }
 
 
     return 0;

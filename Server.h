@@ -33,12 +33,14 @@ private:
     void handleStart(string);
     void handleMove(Row, Column);
     void handleUndo();
+    bool isValid(string);
 
 public:
     Server();
     ~Server();
     void waitForConnection();
-    void handleCommand(char*);
+    void handleCommand();
+    void getCommand();
 };
 
 #endif
