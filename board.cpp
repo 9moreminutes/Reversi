@@ -160,7 +160,7 @@ void GameEngine::makeMove(Space s, Tile player){
         int currentdirection = directions[i];
         goThroughSpaces(currentdirection, x, y);
         //keep going until you hit the other piece.
-        while (board[x][y].getTile() != player || isOnBoard(x, y)){
+        while (board[x][y].getTile() != player && isOnBoard(x, y)){
             //push space onto stack as player tile
             pushMove(Space(player, x, y));
             //keep going through space in same direction
