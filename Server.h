@@ -23,8 +23,9 @@ private:
     GameEngine game;
     Tile playerColor,
          aiColor;
-    Difficulty diff;
-    bool started,
+    Difficulty diff = Difficulty::EASY;
+    bool started = false,
+         aiGame = false,
          donef = false;
 
 

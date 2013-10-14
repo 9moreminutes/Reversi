@@ -1,9 +1,6 @@
 #include "Server.h"
 
 Server::Server() {
-    diff = Difficulty::EASY;
-    started = false;
-
     //make connection socket
     connSock = socket(AF_INET, SOCK_STREAM, 0);
     if (connSock < 0) {
@@ -48,9 +45,9 @@ void Server::handleMove(string move) {
     }
     //Make player move
     if (game.checkIfValid(Space(playerColor, row, col),playerColor)) {
-        game.makeMove(Space(playerColor, row, col),playerColor);
         char c = row + 64;
         cout << "Player made move at " << c << col << "..." << endl;
+        game.makeMove(Space(playerColor, row, col),playerColor);
     }
     else {
         char c = row + 64;
@@ -61,35 +58,61 @@ void Server::handleMove(string move) {
     //Make AI move
     vector<Space> moves = game.showPossibleMoves(aiColor);
     if(!moves.empty()) {
-        string s;
+        string s = "";
         switch(moves[0].getColumn()) {
-            case 0:
+            case Column::a:
                 s+="a ";
             break;
-            case 1:
+            case Column::b:
                 s+="b ";
             break;
-            case 2:
+            case Column::c:
                 s+="c ";
             break;
-            case 3:
+            case Column::d:
                 s+="d ";
             break;
-            case 4:
+            case Column::e:
                 s+="e ";
             break;
-            case 5:
+            case Column::f:
                 s+="f ";
             break;
-            case 6:
+            case Column::g:
                 s+="g ";
             break;
-            case 7:
+            case Column::h:
                 s+="h ";
             break;
         }
+        switch(moves[0].getColumn()) {
+            case Row::ONE:
+                s+="1";
+            break;
+            case Row::TWO:
+                s+="2";
+            break;
+            case Row::THREE:
+                s+="3";
+            break;
+            case Row::FOUR:
+                s+="4";
+            break;
+            case Row::FIVE:
+                s+="5";
+            break;
+            case Row::SIX:
+                s+="6";
+            break;
+            case Row::SEVEN:
+                s+="7";
+            break;
+            case Row::EIGHT:
+                s+="8";
+            break;
+        }
         cout << s;
-        cout << "Making move at " << moves[0].getColumn() << moves[0].getRow() << "..." << endl;
+        cout << "Making move at " << s << "..." << endl;
         game.makeMove(moves[0],aiColor);
         write(gameSock,"2",1);
     }
@@ -116,6 +139,46 @@ bool Server::checkMove(string command) {
 
 bool Server::checkStart(string command) {
     if (command.substr(0,8) == "HUMAN-AI") {
+        return true;
+    }
+    if (command.substr(0,5) == "AI-AI") {
+        command.erase(0,5); // remove AI-AI
+
+        int space = command.find(' ');
+        command.erase(0,space); //remove hostname
+
+        //check for port
+        for (int i = 0; i < command.size(); ++i) {
+            if(!isdigit(command[i])) {
+                if (isspace(command[i])) {
+                    space = i;
+                    break;
+                }
+                return false;
+            }
+        }
+        command.erase(0,space); //remove port
+
+        //check difficulty 1
+        if (command.substr(0,4) == "EASY") {
+            command.erase(0,5); //remove difficulty 1 and trailing space
+        }
+        else if (command.substr(0,6) == "MEDIUM") {
+            command.erase(0,7); //remove difficulty 1 and trailing space
+        }
+        else if (command.substr(0,4) == "HARD") {
+            command.erase(0,5); //remove difficulty 1 and trailing space
+        }
+        else {
+            return false;
+        }
+
+        //check difficulty 2
+        if (command.substr(0,4) != "EASY" && command.substr(0,6) != "MEDIUM" && command.substr(0,4) != "HARD") {
+            return false;
+        }
+
+        aiGame = true;
         return true;
     }
     return false;
@@ -181,7 +244,6 @@ void Server::handleCommand() {
 
     if (checkMove(command)) {
         handleMove(command);
-        write(gameSock,"YOU MADE A MOVE\n",16);
         return;
     }
 
