@@ -32,6 +32,23 @@ void Server::handleStart(string s) {
     playerColor = Tile::WHITE;
     aiColor = Tile::BLACK;
     game.resetGame();
+    if (aiGame) {
+        aiSock = socket(AF_INET, SOCK_STREAM, 0);
+
+        struct sockaddr_in aiServer;
+        bzero((char *) &aiServer, sizeof(aiServer)); //clear variable data
+        aiServer.sin_family = AF_INET;
+        aiServer.sin_port = htons(aiPort);
+        aiServer.sin_addr.s_addr = gethostbyname(aiHostname.c_str());
+
+        if (bind(connSock, (struct sockaddr *) &server, sizeof(server)) != 0) {
+            perror("Error binding socket for ai server");
+            exit(1);
+        }
+    }
+        
+
+    }
 }
 
 void Server::handleMove(string move) {
@@ -126,7 +143,6 @@ bool Server::isValid(string command) {
         command.substr(0,4) == "EASY" ||
         command.substr(0,6) == "MEDIUM" ||
         command.substr(0,4) == "HARD") {
-        cout << "Command was keyword" << endl;
         return true;
     }
 
@@ -145,6 +161,7 @@ bool Server::checkStart(string command) {
         command.erase(0,5); // remove AI-AI
 
         int space = command.find(' ');
+        string hostname = command.substr(0,space);
         command.erase(0,space); //remove hostname
 
         //check for port
@@ -157,16 +174,21 @@ bool Server::checkStart(string command) {
                 return false;
             }
         }
+        string portNum = command.substr(0,space);
         command.erase(0,space); //remove port
 
         //check difficulty 1
+        Difficulty newdiff;
         if (command.substr(0,4) == "EASY") {
+            newdiff = Difficulty::EASY;
             command.erase(0,5); //remove difficulty 1 and trailing space
         }
         else if (command.substr(0,6) == "MEDIUM") {
+            newdiff = Difficulty::MEDIUM;
             command.erase(0,7); //remove difficulty 1 and trailing space
         }
         else if (command.substr(0,4) == "HARD") {
+            newdiff = Difficulty:HARD;
             command.erase(0,5); //remove difficulty 1 and trailing space
         }
         else {
@@ -174,10 +196,22 @@ bool Server::checkStart(string command) {
         }
 
         //check difficulty 2
-        if (command.substr(0,4) != "EASY" && command.substr(0,6) != "MEDIUM" && command.substr(0,4) != "HARD") {
+        if (command.substr(0,4) == "EASY") {
+            aiDiff = Difficulty::EASY;
+        }
+        else if (command.substr(0,6) == "MEDIUM") {
+            aiDiff = Difficulty::MEDIUM;
+        }
+        else if (command.substr(0,4) == "HARD") {
+            aiDiff = Difficulty:HARD;
+        }
+        else {
             return false;
         }
-
+        cout << "Starting game against AI at " << hostname << ":" << portNum << "...";
+        aiHostname = hostname;
+        aiPort = atoi(portNum.c_str());
+        diff = newdiff;
         aiGame = true;
         return true;
     }
@@ -248,11 +282,14 @@ void Server::handleCommand() {
     }
 
     if (command.substr(0,7) == "DISPLAY") {
-        //game.display();
+        //buffer = game.display();
+        //write(gameSock,buffer,string(buffer).length());
+        return;
     }
 
     if (command.substr(0,4) == "UNDO") {
         game.undoMove();
+        return;
     }
 }
 

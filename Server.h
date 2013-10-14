@@ -23,14 +23,22 @@ private:
     GameEngine game;
     Tile playerColor,
          aiColor;
-    Difficulty diff = Difficulty::EASY;
+    Difficulty diff = Difficulty::EASY,
+               aiDiff = Difficulty::EASY;
     bool started = false,
          aiGame = false,
          donef = false;
 
 
-    int connSock, gameSock, port, msgSize, clilen;
+    int connSock, 
+        aiSock, 
+        gameSock, 
+        port, 
+        msgSize, 
+        clilen,
+        aiPort;
     char buffer[64];
+    string aiHostname;
     struct sockaddr_in client, server;
 
     /* Functions *************/
