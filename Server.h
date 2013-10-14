@@ -24,7 +24,9 @@ private:
     Tile playerColor,
          aiColor;
     Difficulty diff;
-    bool started;
+    bool started,
+         donef = false;
+
 
     int connSock, gameSock, port, msgSize, clilen;
     char buffer[64];
@@ -44,6 +46,7 @@ public:
     void waitForConnection();
     void handleCommand();
     void getCommand();
+    bool done() {return donef;}
 };
 
 #endif

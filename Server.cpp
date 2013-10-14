@@ -27,7 +27,8 @@ Server::Server() {
 }
 
 Server::~Server() {
-
+    close(connSock);
+    close(gameSock);
 }
 
 void Server::handleStart(string s) {
@@ -49,12 +50,14 @@ void Server::handleUndo() {
 }
 
 bool Server::isValid(string command) {
-    if (command == "UNDO" || 
-        command == "DISPLAY" || 
-        command == "EXIT" ||
-        command == "EASY" ||
-        command == "MEDIUM" ||
-        command == "HARD") {
+    cout << command << endl;
+    if (command.substr(0,4) == "UNDO" || 
+        command.substr(0,7) == "DISPLAY" || 
+        command.substr(0,4) == "EXIT" ||
+        command.substr(0,4) == "EASY" ||
+        command.substr(0,6) == "MEDIUM" ||
+        command.substr(0,4) == "HARD") {
+        cout << "Command was keyword" << endl;
         return true;
     }
 
@@ -62,12 +65,13 @@ bool Server::isValid(string command) {
 }
 
 bool Server::checkMove(string command) {
-    return (command.length() == 3) && 
-           ((command[3] > 64 && command[3] < 73) || (command[3] > 96 && command[3] < 105)) && 
-           (command[3] > 48 && command[3] < 57);
+    return ((command[0] > 64 && command[0] < 73) || (command[0] > 96 && command[0] < 105)) && (command[2] > 48 && command[2] < 57);
 }
 
 bool Server::checkStart(string command) {
+    if (command.substr(0,8) == "HUMAN-AI") {
+        return true;
+    }
     return false;
 }
 
@@ -76,7 +80,7 @@ void Server::waitForConnection() {
     gameSock = accept(connSock, (struct sockaddr *) &client, (socklen_t*) &clilen);
     if (gameSock < 0)
         perror("Error accepting connection");
-    write(gameSock,"WELCOME", 7);
+    write(gameSock,"WELCOME\n", 8);
 }
 
 void Server::handleCommand() {
@@ -85,36 +89,51 @@ void Server::handleCommand() {
 
     //make sure command is valid
     if (!isValid(command)) {
-        write(gameSock,"ILLEGAL",7);
+        write(gameSock,"ILLEGAL\n",8);
+        return;
+    }
+
+    if (command.substr(0,4) == "EXIT") {
+        cout << "EXIT command recieved...exiting" << endl;
+        donef = true;
+        return;
     }
 
     if (!started) {
-        if (!checkStart(command)) {
-            write(gameSock,"ILLEGAL",7);
-            return;
+        if (checkStart(command)) {
+            if (command.substr(0,8) == "HUMAN-AI") {
+                write(gameSock,"OK\n",3);
+                cout << "Starting human vs. AI game..." << endl;
+                started = true;
+            } 
         }
+        else {
+            write(gameSock,"ILLEGAL\n",8);
+        }
+        return;
     }
 
-    if (command == "EASY" || command == "MEDIUM" || command == "HARD") {
-        if (command == "EASY") {
+    if (command.substr(0,4) == "EASY" || command.substr(0,6) == "MEDIUM" || command.substr(0,4) == "HARD") {
+        if (command.substr(0,4) == "EASY") {
             diff = EASY;
-            write(gameSock,"OK",2);
+            write(gameSock,"OK\n",3);
             return;
         }
-        if (command == "MEDIUM") {
+        if (command.substr(0,6) == "MEDIUM") {
             diff = MEDIUM;
-            write(gameSock,"OK",2);
+            write(gameSock,"OK\n",3);
             return;
         }
         diff = HARD;
-        write(gameSock,"OK",2);
+        write(gameSock,"OK\n",3);
         return;
     }
 
     if (checkMove(command)) {
-        write(gameSock,"YOU MADE A MOVE",2);
+        write(gameSock,"YOU MADE A MOVE\n",16);
         return;
     }
+
 }
 
 void Server::getCommand() {
@@ -126,11 +145,10 @@ int main(int argc, char const *argv[])
 {
     Server server;
     server.waitForConnection();
-    while(true) {
+    while(!server.done()) {
         server.getCommand();
         server.handleCommand();
     }
-
 
     return 0;
 }

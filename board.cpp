@@ -1,6 +1,9 @@
 # include "board.h"
 using namespace std;
 
+GameEngine::~GameEngine() {
+    
+}
 
 void GameEngine::setSpace(Tile t, int row, int column){
     board[row][column].setTile(t);
