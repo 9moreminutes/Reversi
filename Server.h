@@ -34,7 +34,7 @@ private:
 
     /* Functions *************/
     void handleStart(string);
-    void handleMove(Row, Column);
+    void handleMove(string);
     void handleUndo();
     bool isValid(string);
     bool checkMove(string);

@@ -37,12 +37,62 @@ void Server::handleStart(string s) {
     game.resetGame();
 }
 
-void Server::handleMove(Row r, Column c) {
+void Server::handleMove(string move) {
+    int col = move[2] - 48;
+    int row;
+    if (isupper(move[0])) {
+        row = move[0] - 64;
+    }
+    else {
+        row = move[0] - 96;
+    }
     //Make player move
-    game.makeMove(Space(r,c,playerColor),playerColor);
-
+    if (game.checkIfValid(Space(playerColor, row, col),playerColor)) {
+        game.makeMove(Space(playerColor, row, col),playerColor);
+        char c = row + 64;
+        cout << "Player made move at " << c << col << "..." << endl;
+    }
+    else {
+        char c = row + 64;
+        cout << "Player tried invalid move at " << c << col << "..." << endl;
+        write(gameSock,"INVALID\n",8);
+        return;
+    }
     //Make AI move
-    game.makeMove(Space(r,c,aiColor),aiColor);
+    vector<Space> moves = game.showPossibleMoves(aiColor);
+    if(!moves.empty()) {
+        string s;
+        switch(moves[0].getColumn()) {
+            case 0:
+                s+="a ";
+            break;
+            case 1:
+                s+="b ";
+            break;
+            case 2:
+                s+="c ";
+            break;
+            case 3:
+                s+="d ";
+            break;
+            case 4:
+                s+="e ";
+            break;
+            case 5:
+                s+="f ";
+            break;
+            case 6:
+                s+="g ";
+            break;
+            case 7:
+                s+="h ";
+            break;
+        }
+        cout << s;
+        cout << "Making move at " << moves[0].getColumn() << moves[0].getRow() << "..." << endl;
+        game.makeMove(moves[0],aiColor);
+        write(gameSock,"2",1);
+    }
 }
 
 void Server::handleUndo() {
@@ -105,6 +155,7 @@ void Server::handleCommand() {
                 write(gameSock,"OK\n",3);
                 cout << "Starting human vs. AI game..." << endl;
                 started = true;
+                handleStart(command);
             } 
         }
         else {
@@ -117,19 +168,23 @@ void Server::handleCommand() {
         if (command.substr(0,4) == "EASY") {
             diff = EASY;
             write(gameSock,"OK\n",3);
+            cout << "Difficulty set to EASY..." << endl;
             return;
         }
         if (command.substr(0,6) == "MEDIUM") {
             diff = MEDIUM;
             write(gameSock,"OK\n",3);
+            cout << "Difficulty set to MEDIUM..." << endl;
             return;
         }
         diff = HARD;
         write(gameSock,"OK\n",3);
+        cout << "Difficulty set to HARD..." << endl;
         return;
     }
 
     if (checkMove(command)) {
+        handleMove(command);
         write(gameSock,"YOU MADE A MOVE\n",16);
         return;
     }
