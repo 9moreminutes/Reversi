@@ -54,7 +54,6 @@ public:
     void goThroughSpaces(int i, int &x, int &y);
     bool checkIfValid(Space s, Tile player);
     bool isOnBoard(int row, int column);
-    void move(Space s, Tile Player);
     void undoMove(); // pops move from stack and undoes
     vector<Space> showPossibleMoves(Tile player); //if empty, no moves
     int tallyPoints();

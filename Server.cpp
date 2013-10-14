@@ -95,10 +95,6 @@ void Server::handleMove(string move) {
     }
 }
 
-void Server::handleUndo() {
-    game.undoMove();
-}
-
 bool Server::isValid(string command) {
     cout << command << endl;
     if (command.substr(0,4) == "UNDO" || 
@@ -189,11 +185,18 @@ void Server::handleCommand() {
         return;
     }
 
+    if (command.substr(0,7) == "DISPLAY") {
+        //game.display();
+    }
+
+    if (command.substr(0,4) == "UNDO") {
+        game.undoMove();
+    }
 }
 
 void Server::getCommand() {
-    bzero(buffer, 256);
-    read(gameSock, buffer, 256);
+    bzero(buffer, 64);
+    read(gameSock, buffer, 64);
 }
 
 int main(int argc, char const *argv[])

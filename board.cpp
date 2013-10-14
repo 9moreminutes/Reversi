@@ -5,10 +5,6 @@ GameEngine::~GameEngine() {
     
 }
 
-void GameEngine::setSpace(Tile t, int row, int column){
-    board[row][column].setTile(t);
-}
-
 Tile opposite(Tile color){
     Tile tile;
     if (color == WHITE){
@@ -22,6 +18,7 @@ Tile opposite(Tile color){
     }
     return tile;
 }
+
 void GameEngine::drawBoard(){
     for(int i = 0; i<8; ++i){
         for(int j = 0; j < 8; ++j){
@@ -30,113 +27,6 @@ void GameEngine::drawBoard(){
         cout << endl;
     }
 }
-
-void GameEngine::undoMove(){
-    
-    board = undo;
-    
-}
-
-bool GameEngine::checkDirection(int row, int column, int xdirec, int ydirec, Tile enemycolor){
-    Space z = Space(enemycolor, 0, 0);
-    z = board[row][column];
-    if(z.getTile()!=EMPTY){
-        //cout << "Invalid Move, spot not empty" << endl;
-        return false;
-    }
-    int x = column + xdirec;
-    int y = row + ydirec; 
-    if(x > 1 && x <=8 && y > 1 && y <=8){
-    z = board[y-2][x-2];
-    }
-    else{ 
-        //cout << row << " row does not exist and/or " << column << " column does not exist" << endl;
-        return false;
-    }
-    if(z.getTile() != enemycolor){
-        return false;
-    }
-    while(z.getTile() == enemycolor && x > 1 && x <=8 && y > 1 && y <=8){
-        x += xdirec;
-        y += ydirec;
-        z = board[y-2][x-2];
-        //cout << "x is " << x << " and y is " << y << endl;
-    }
-    if(z.getTile() == EMPTY || x <0 || x > 8 || y < 0 || y > 8){
-        return false;
-    }
-    return true;
-}
-
-bool GameEngine::checkIfValid(Space s, Tile player){
-    Tile enemy = opposite(player);
-    if(enemy == EMPTY){
-        cout << "Entered nonexisting player type, Bad entry" << endl;
-        return false;
-    }
-    
-    
-    int r = s.getRow()+1;
-    int c = s.getColumn()+1;
-    bool test;
-    
-    //stores which directions are valid
-    //clear before push back
-    directions.clear();
-    
-    if(checkDirection(r, c, 0, -1, enemy)){
-    //  cout << "Good Move Up" << endl;
-        directions.push_back(3);
-        return true;
-    }
-    else if(checkDirection(r, c, 0, 1, enemy)){
-    //  cout << "Good Move Down" << endl;
-        directions.push_back(2);
-        return true;
-    }
-    else if(checkDirection(r, c, -1, 0, enemy)){
-    //  cout << "Good Move Left" << endl;
-        directions.push_back(1);
-        return true;
-    }   
-    else if(checkDirection(r, c, 1, 0, enemy)){
-        //cout << "Good Move Right" << endl;
-        directions.push_back(0);
-        return true;
-    }
-    else if(checkDirection(r, c, 1, 1, enemy)){
-        //cout << "Good Move Down Right" << endl;
-        directions.push_back(4);
-        return true;
-    }
-    else if(checkDirection(r, c, 1, -1, enemy)){
-    //  cout << "Good Move Up Right" << endl;
-        directions.push_back(6);
-        return true;
-    }
-    else if(checkDirection(r, c, -1, 1, enemy)){
-    //  cout << "Good Move Down Left" << endl;
-        directions.push_back(5);
-        return true;
-    }
-    else if(checkDirection(r, c, -1, -1, enemy)){
-    //  cout << "Good Move Down Right" << endl;
-        directions.push_back(7);
-        return true;
-    }
-    else{
-        //cout << "Bad Move" << endl;
-        return false;
-    }
-    //cout << "Row is " << r << endl;
-    //cout << "Column is " << c << endl;
-}
-
-bool GameEngine::isOnBoard(int row, int column){
-    if ( row < 0 || row > 7 || column < 0 || column > 8) return false;
-    else return true;
-}
-
 
 //flip tiles and update the board
 void GameEngine::makeMove(Space s, Tile player){
@@ -233,6 +123,81 @@ void GameEngine::goThroughSpaces(int i, int &x, int &y){
     }
 }
 
+bool GameEngine::checkIfValid(Space s, Tile player){
+    Tile enemy = opposite(player);
+    if(enemy == EMPTY){
+        cout << "Entered nonexisting player type, Bad entry" << endl;
+        return false;
+    }
+    
+    
+    int r = s.getRow()+1;
+    int c = s.getColumn()+1;
+    bool test;
+    
+    //stores which directions are valid
+    //clear before push back
+    directions.clear();
+    
+    if(checkDirection(r, c, 0, -1, enemy)){
+    //  cout << "Good Move Up" << endl;
+        directions.push_back(3);
+        return true;
+    }
+    else if(checkDirection(r, c, 0, 1, enemy)){
+    //  cout << "Good Move Down" << endl;
+        directions.push_back(2);
+        return true;
+    }
+    else if(checkDirection(r, c, -1, 0, enemy)){
+    //  cout << "Good Move Left" << endl;
+        directions.push_back(1);
+        return true;
+    }   
+    else if(checkDirection(r, c, 1, 0, enemy)){
+        //cout << "Good Move Right" << endl;
+        directions.push_back(0);
+        return true;
+    }
+    else if(checkDirection(r, c, 1, 1, enemy)){
+        //cout << "Good Move Down Right" << endl;
+        directions.push_back(4);
+        return true;
+    }
+    else if(checkDirection(r, c, 1, -1, enemy)){
+    //  cout << "Good Move Up Right" << endl;
+        directions.push_back(6);
+        return true;
+    }
+    else if(checkDirection(r, c, -1, 1, enemy)){
+    //  cout << "Good Move Down Left" << endl;
+        directions.push_back(5);
+        return true;
+    }
+    else if(checkDirection(r, c, -1, -1, enemy)){
+    //  cout << "Good Move Down Right" << endl;
+        directions.push_back(7);
+        return true;
+    }
+    else{
+        //cout << "Bad Move" << endl;
+        return false;
+    }
+    //cout << "Row is " << r << endl;
+    //cout << "Column is " << c << endl;
+}
+
+bool GameEngine::isOnBoard(int row, int column){
+    if ( row < 0 || row > 7 || column < 0 || column > 8) return false;
+    else return true;
+}
+
+void GameEngine::undoMove(){
+    
+    board = undo;
+    
+}
+
 vector <Space> GameEngine::showPossibleMoves(Tile player){
     vector <Space> result;
     for(int i = 0; i < 8; i++){
@@ -270,6 +235,41 @@ void GameEngine::resetGame() {
             }
         }
     }
+}
+
+bool GameEngine::checkDirection(int row, int column, int xdirec, int ydirec, Tile enemycolor){
+    Space z = Space(enemycolor, 0, 0);
+    z = board[row][column];
+    if(z.getTile()!=EMPTY){
+        //cout << "Invalid Move, spot not empty" << endl;
+        return false;
+    }
+    int x = column + xdirec;
+    int y = row + ydirec; 
+    if(x > 1 && x <=8 && y > 1 && y <=8){
+    z = board[y-2][x-2];
+    }
+    else{ 
+        //cout << row << " row does not exist and/or " << column << " column does not exist" << endl;
+        return false;
+    }
+    if(z.getTile() != enemycolor){
+        return false;
+    }
+    while(z.getTile() == enemycolor && x > 1 && x <=8 && y > 1 && y <=8){
+        x += xdirec;
+        y += ydirec;
+        z = board[y-2][x-2];
+        //cout << "x is " << x << " and y is " << y << endl;
+    }
+    if(z.getTile() == EMPTY || x <0 || x > 8 || y < 0 || y > 8){
+        return false;
+    }
+    return true;
+}
+
+void GameEngine::setSpace(Tile t, int row, int column){
+    board[row][column].setTile(t);
 }
 
 //int main(){

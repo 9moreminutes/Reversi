@@ -35,7 +35,6 @@ private:
     /* Functions *************/
     void handleStart(string);
     void handleMove(string);
-    void handleUndo();
     bool isValid(string);
     bool checkMove(string);
     bool checkStart(string);
