@@ -33,7 +33,7 @@ void Server::handleStart(string s) {
     aiColor = Tile::BLACK;
     game.resetGame();
     if (aiGame) {
-        aiSock = socket(AF_INET, SOCK_STREAM, 0);
+        /*aiSock = socket(AF_INET, SOCK_STREAM, 0);
 
         struct sockaddr_in aiServer;
         bzero((char *) &aiServer, sizeof(aiServer)); //clear variable data
@@ -45,9 +45,7 @@ void Server::handleStart(string s) {
             perror("Error binding socket for ai server");
             exit(1);
         }
-    }
-        
-
+        cout << "BOUND AI SERVER SOCKET";*/
     }
 }
 
@@ -188,7 +186,7 @@ bool Server::checkStart(string command) {
             command.erase(0,7); //remove difficulty 1 and trailing space
         }
         else if (command.substr(0,4) == "HARD") {
-            newdiff = Difficulty:HARD;
+            newdiff = Difficulty::HARD;
             command.erase(0,5); //remove difficulty 1 and trailing space
         }
         else {
@@ -203,7 +201,7 @@ bool Server::checkStart(string command) {
             aiDiff = Difficulty::MEDIUM;
         }
         else if (command.substr(0,4) == "HARD") {
-            aiDiff = Difficulty:HARD;
+            aiDiff = Difficulty::HARD;
         }
         else {
             return false;
