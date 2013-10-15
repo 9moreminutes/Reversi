@@ -72,7 +72,6 @@ void Server::handleMove(string move) {
     //Make AI move
     vector<Space> moves = game.showPossibleMoves(aiColor);
     if(!moves.empty()) {
-        cout << "Making move..." << endl;
         string s = "";
         switch(moves[0].getColumn()) {
             case Column::a:
@@ -100,7 +99,7 @@ void Server::handleMove(string move) {
                 s+="h ";
             break;
         }
-        switch(moves[0].getColumn()) {
+        switch(moves[0].getRow()) {
             case Row::ONE:
                 s+="1";
             break;
@@ -126,10 +125,9 @@ void Server::handleMove(string move) {
                 s+="8";
             break;
         }
-        cout << s;
         cout << "Making move at " << s << "..." << endl;
         game.makeMove(moves[0],aiColor);
-        write(gameSock,"2",1);
+        write(gameSock,(s+"\n").c_str(),s.length()+1);
     }
 }
 
@@ -280,7 +278,7 @@ void Server::handleCommand() {
     }
 
     if (command.substr(0,7) == "DISPLAY") {
-        write(gameSock,game.displayBoard().c_str(),190);
+        write(gameSock,game.displayBoard().c_str(),200);
         return;
     }
 

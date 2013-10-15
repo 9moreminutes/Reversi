@@ -74,6 +74,9 @@ string GameEngine::displayBoard(){
     
     //last row of chars
     ++n;
+    boardarray[n] = ';';
+
+    ++n;
     boardarray[n] = ' ';
     
     ++n;
@@ -129,11 +132,11 @@ void GameEngine::makeMove(Space s, Tile player){
     //make copy of current board in case of undo
     undo = board;
     
-    int xstart = s.getRow();
-    int ystart = s.getColumn();
+    int xstart = s.getRow()+1;
+    int ystart = s.getColumn()-1;
     
-    int x = s.getRow();
-    int y = s.getColumn();
+    int x = s.getRow()+1;
+    int y = s.getColumn()-1;
     
     //traverse each direction  from the desired move
     for (int i = 0; i < directions.size(); i++) {
@@ -143,7 +146,8 @@ void GameEngine::makeMove(Space s, Tile player){
         //keep going until you hit the other piece.
         while (isOnBoard(x, y) && board[x][y].getTile() != player){
             //push space onto stack as player tile
-            pushMove(Space(player, x, y));
+            //board[x][y].setTile(opposite(player));
+            cout << "setting " << x << y << " to " << player;
             //keep going through space in same direction
             goThroughSpaces(currentdirection, x, y);
         }
@@ -152,14 +156,7 @@ void GameEngine::makeMove(Space s, Tile player){
         y = ystart;
     }
     
-    //update board
-    board[s.getRow()][s.getColumn()] = s; //place move
-    //flip tiles
-    while (!moves.empty()){
-        Space newmove = popMove();
-        //update board vector with newmove
-        board[newmove.getRow()][newmove.getColumn()] = newmove;
-    }
+    board[s.getRow()+1][s.getColumn()-1].setTile(player); //place move
 }
 
 //go through each space in a specified direction
@@ -222,8 +219,8 @@ bool GameEngine::checkIfValid(Space s, Tile player){
     }
     
     
-    int r = s.getRow()-1;
-    int c = s.getColumn()-1;
+    int r = s.getRow();
+    int c = s.getColumn();
     bool test;
     
     //stores which directions are valid
@@ -329,7 +326,7 @@ void GameEngine::resetGame() {
 }
 
 bool GameEngine::checkDirection(int row, int column, int xdirec, int ydirec, Tile enemycolor){
-    Space z = Space(enemycolor, 0, 0);
+    Space z;
     z = board[row][column];
     if(z.getTile()!=EMPTY){
         //cout << "Invalid Move, spot not empty" << endl;
@@ -337,23 +334,21 @@ bool GameEngine::checkDirection(int row, int column, int xdirec, int ydirec, Til
     }
     int x = column + xdirec;
     int y = row + ydirec; 
-    if(x > 1 && x <=8 && y > 1 && y <=8){
-    z = board[y-1][x-1];
-    }
-    else{ 
+    if(x > 7 || x < 0 || y > 7 || y < 0){
         //cout << row << " row does not exist and/or " << column << " column does not exist" << endl;
         return false;
     }
+    z = board[x][y];
     if(z.getTile() != enemycolor){
         return false;
     }
-    while(z.getTile() == enemycolor && x > 1 && x <=8 && y > 1 && y <=8){
+    while(z.getTile() == enemycolor && x > 0 && x <=7 && y > 0 && y <=7){
         x += xdirec;
         y += ydirec;
-        z = board[y-1][x-1];
+        z = board[y][x];
         //cout << "x is " << x << " and y is " << y << endl;
     }
-    if(z.getTile() == EMPTY || x <0 || x > 8 || y < 0 || y > 8){
+    if(z.getTile() == EMPTY || x <0 || x > 7 || y < 0 || y > 7){
         return false;
     }
     return true;

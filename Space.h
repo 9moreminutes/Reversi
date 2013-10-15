@@ -25,6 +25,11 @@ class Space{
         Row row;
         Column column;
     public:
+        Space() {
+            tile = EMPTY;
+            row = ONE;
+            column = a;
+        }
         Space(Tile t, int r, int col){
             tile = t;
             switch(r){
