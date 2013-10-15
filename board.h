@@ -52,12 +52,8 @@ public:
         moves.push(s);
     }
     
-<<<<<<< HEAD
-    //pass array (created by server) into function and fill that array
-    void displayBoard(char *boardarray);
-=======
+
     string displayBoard();
->>>>>>> 3c9773e5239e3ad9ec4c29745d468090fc47290b
     
     
     void makeMove(Space s, Tile player);
