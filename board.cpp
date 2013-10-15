@@ -5,7 +5,7 @@ GameEngine::~GameEngine() {
     
 }
 
-void GameEngine::displayBoard(){
+string GameEngine::displayBoard(){
     //set top row of column
     char boardarray[190] = {' ', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '\n'};
     int n = 18; //there are 19-1 characters per row (including '\n')
@@ -86,7 +86,7 @@ void GameEngine::displayBoard(){
     ++n;
     boardarray[n] = '\n';
     
-    boardarr = boardarray;
+    return string(boardarray);
     
 }
 

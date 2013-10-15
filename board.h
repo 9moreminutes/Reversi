@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <stack>
+#include <string>
 #include <iostream>
 
 #include "Space.h"
@@ -51,7 +52,7 @@ public:
         moves.push(s);
     }
     
-    void displayBoard();
+    string displayBoard();
     
     
     void makeMove(Space s, Tile player);
