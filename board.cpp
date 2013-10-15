@@ -5,8 +5,12 @@ GameEngine::~GameEngine() {
     
 }
 
+<<<<<<< HEAD
 void GameEngine::displayBoard(char *boardarray){
     //total chars is 200.
+=======
+string GameEngine::displayBoard(){
+>>>>>>> 3c9773e5239e3ad9ec4c29745d468090fc47290b
     //set top row of column
     /*char boardarray[200] = {';',' ', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '\n'};*/
     
@@ -112,6 +116,11 @@ void GameEngine::displayBoard(char *boardarray){
     ++n;
     boardarray[n] = '\n';
     
+<<<<<<< HEAD
+=======
+    return string(boardarray);
+    
+>>>>>>> 3c9773e5239e3ad9ec4c29745d468090fc47290b
 }
 
 
