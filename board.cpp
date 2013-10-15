@@ -76,7 +76,7 @@ string GameEngine::displayBoard(){
     
     for (int i = 0; i < 8; ++i){
         ++n;
-        boardarray[n] = '_';
+        boardarray[n] = i+65;
         
         ++n;
         boardarray[n] = ' ';
@@ -122,7 +122,7 @@ void GameEngine::makeMove(Space s, Tile player){
     }
     
     //make copy of current board in case of undo
-    board = undo;
+    undo = board;
     
     int xstart = s.getRow();
     int ystart = s.getColumn();
@@ -217,8 +217,8 @@ bool GameEngine::checkIfValid(Space s, Tile player){
     }
     
     
-    int r = s.getRow()+1;
-    int c = s.getColumn()+1;
+    int r = s.getRow()-1;
+    int c = s.getColumn()-1;
     bool test;
     
     //stores which directions are valid

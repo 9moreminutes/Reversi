@@ -45,8 +45,8 @@ public:
     //push and pop functions to modify stack
     Space popMove(){
         Space s = moves.top();
-        return s;
         moves.pop();
+        return s;
     }
     void pushMove(Space s){
         moves.push(s);

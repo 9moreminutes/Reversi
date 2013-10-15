@@ -44,7 +44,7 @@ void Server::handleStart(string s) {
         bcopy((char *)aiHost->h_addr, (char *)&aiServer.sin_addr.s_addr, aiHost->h_length);
         if (connect(aiSock,(struct sockaddr *) &aiServer,sizeof(aiServer)) < 0) 
             perror("Error connecting to other server");
-        cout << "Connected to aiHostname...";
+        cout << "Connected to aiHostname..." << endl;
     }
 }
 
@@ -72,6 +72,7 @@ void Server::handleMove(string move) {
     //Make AI move
     vector<Space> moves = game.showPossibleMoves(aiColor);
     if(!moves.empty()) {
+        cout << "Making move..." << endl;
         string s = "";
         switch(moves[0].getColumn()) {
             case Column::a:

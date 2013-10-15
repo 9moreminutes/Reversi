@@ -38,7 +38,7 @@ private:
         msgSize, 
         clilen,
         aiPort;
-    char buffer[64];
+    char buffer[256];
     string aiHostname;
     struct sockaddr_in client, server;
 
