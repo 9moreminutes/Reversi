@@ -19,6 +19,7 @@ private:
     
     vector <int> directions; //holds which of the 8 directions are valid
     
+    
 public:
     //constructor, initializes board
     GameEngine(){
@@ -49,6 +50,9 @@ public:
     void pushMove(Space s){
         moves.push(s);
     }
+    
+    void displayBoard();
+    
     
     void makeMove(Space s, Tile player);
     void goThroughSpaces(int i, int &x, int &y);

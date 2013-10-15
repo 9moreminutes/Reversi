@@ -5,6 +5,92 @@ GameEngine::~GameEngine() {
     
 }
 
+void GameEngine::displayBoard(){
+    //set top row of column
+    char boardarray[190] = {' ', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '\n'};
+    int n = 18; //there are 19-1 characters per row (including '\n')
+    
+    //print tiles row by row
+    for (int i = 0; i < board.size(); i++){
+        //store number
+        ++n;
+        switch (i) {
+            case 0:
+                boardarray[n] = '1';
+                break;
+            case 1:
+                boardarray[n] = '2';
+                break;
+            case 2:
+                boardarray[n] = '3';
+                break;
+            case 3:
+                boardarray[n] = '4';
+                break;
+            case 4:
+                boardarray[n] = '5';
+                break;
+            case 5:
+                boardarray[n] = '6';
+                break;
+            case 6:
+                boardarray[n] = '7';
+                break;
+            case 7:
+                boardarray[n] = '8';
+                break;
+                
+            default:
+                break;
+        }
+        
+        //store first '|'
+        ++n;
+        boardarray[n] = '|';
+        
+        //store player
+        //go through each column in current row
+        for (int j = 0; j < board[i].size(); ++j){
+            ++n;
+            if (board[i][j].getTile() == WHITE) boardarray[n] = 'O';
+            else if (board[i][j].getTile() == BLACK) boardarray[n] = '@';
+            else boardarray[n] = '_';
+            
+            ++n;
+            boardarray[n] = '|';
+        }
+        
+        //finish row with newline
+        ++n;
+        boardarray[n] = '\n';
+        
+    }
+    
+    
+    //last row of chars
+    ++n;
+    boardarray[n] = ' ';
+    
+    ++n;
+    boardarray[n] = ' ';
+    
+    for (int i = 0; i < 8; ++i){
+        ++n;
+        boardarray[n] = '_';
+        
+        ++n;
+        boardarray[n] = ' ';
+        
+    }
+    
+    ++n;
+    boardarray[n] = '\n';
+    
+    boardarr = boardarray;
+    
+}
+
+
 Tile opposite(Tile color){
     Tile tile;
     if (color == WHITE){
@@ -188,7 +274,7 @@ bool GameEngine::checkIfValid(Space s, Tile player){
 }
 
 bool GameEngine::isOnBoard(int row, int column){
-    if ( row < 0 || row > 7 || column < 0 || column > 8) return false;
+    if ( row < 0 || row > 7 || column < 0 || column > 7) return false;
     else return true;
 }
 
@@ -247,7 +333,7 @@ bool GameEngine::checkDirection(int row, int column, int xdirec, int ydirec, Til
     int x = column + xdirec;
     int y = row + ydirec; 
     if(x > 1 && x <=8 && y > 1 && y <=8){
-    z = board[y-2][x-2];
+    z = board[y-1][x-1];
     }
     else{ 
         //cout << row << " row does not exist and/or " << column << " column does not exist" << endl;
@@ -259,7 +345,7 @@ bool GameEngine::checkDirection(int row, int column, int xdirec, int ydirec, Til
     while(z.getTile() == enemycolor && x > 1 && x <=8 && y > 1 && y <=8){
         x += xdirec;
         y += ydirec;
-        z = board[y-2][x-2];
+        z = board[y-1][x-1];
         //cout << "x is " << x << " and y is " << y << endl;
     }
     if(z.getTile() == EMPTY || x <0 || x > 8 || y < 0 || y > 8){
