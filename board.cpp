@@ -131,12 +131,26 @@ void GameEngine::makeMove(Space s, Tile player){
     
     //make copy of current board in case of undo
     undo = board;
+
+    int x = s.getRow();
+    int y = s.getColumn();
+
+    board[x][y].setTile(player);
+
+    for (int i = 0; i < directions.size(); ++i) {
+        goThroughSpaces(directions[i], x, y);
+        while (isOnBoard(x,y) && board[x][y].getTile() != player && board[x][y].getTile() != EMPTY) {
+            board[x][y].setTile(player);
+            goThroughSpaces(directions[i],x,y);
+        }
+        
+    }
+    /*
+    int xstart = s.getRow();
+    int ystart = s.getColumn();
     
-    int xstart = s.getRow()+1;
-    int ystart = s.getColumn()-1;
-    
-    int x = s.getRow()+1;
-    int y = s.getColumn()-1;
+    int x = s.getRow();
+    int y = s.getColumn();
     
     //traverse each direction  from the desired move
     for (int i = 0; i < directions.size(); i++) {
@@ -146,7 +160,7 @@ void GameEngine::makeMove(Space s, Tile player){
         //keep going until you hit the other piece.
         while (isOnBoard(x, y) && board[x][y].getTile() != player){
             //push space onto stack as player tile
-            //board[x][y].setTile(opposite(player));
+            board[x][y].setTile(opposite(player));
             cout << "setting " << x << y << " to " << player;
             //keep going through space in same direction
             goThroughSpaces(currentdirection, x, y);
@@ -156,7 +170,7 @@ void GameEngine::makeMove(Space s, Tile player){
         y = ystart;
     }
     
-    board[s.getRow()+1][s.getColumn()-1].setTile(player); //place move
+    board[s.getRow()+1][s.getColumn()-1].setTile(player); //place move*/
 }
 
 //go through each space in a specified direction
