@@ -7,11 +7,16 @@ GameEngine::~GameEngine() {
 
 string GameEngine::displayBoard(){
     //set top row of column
-    char boardarray[190] = {' ', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '\n'};
-    int n = 18; //there are 19-1 characters per row (including '\n')
+    char boardarray[200] = {';',' ', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '\n'};
+
+    
+    
+    int n = 19; //there are 20 characters per row (including '\n')
     
     //print tiles row by row
     for (int i = 0; i < board.size(); i++){
+        ++n;
+        boardarray[n] =';';
         //store number
         ++n;
         switch (i) {
