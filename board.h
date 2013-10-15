@@ -51,7 +51,8 @@ public:
         moves.push(s);
     }
     
-    void displayBoard();
+    //pass array (created by server) into function and fill that array
+    void displayBoard(char *boardarray);
     
     
     void makeMove(Space s, Tile player);
