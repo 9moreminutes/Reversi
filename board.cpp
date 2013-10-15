@@ -123,27 +123,142 @@ void GameEngine::drawBoard(){
 }
 
 //flip tiles and update the board
-void GameEngine::makeMove(Space s, Tile player){
+void GameEngine::makeMove(int row, int col, Tile player){
     //check if valid move
-    if (!checkIfValid(s, player)){
+    cout << "ROW:" << row << endl;
+    cout << "COL:" << col << endl;
+    if (!checkIfValid(Space(player,row+1,col+1), player)){
         return; //do nothing.
     }
     
     //make copy of current board in case of undo
     undo = board;
 
-    int x = s.getRow();
-    int y = s.getColumn();
+    int x = row;
+    int y = col;
 
     board[x][y].setTile(player);
-
+    directions.clear();
+    int xdir =1, ydir = 1;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            directions.push_back(4);
+        }
+    }
+    xdir = 1;
+    ydir = 0;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            directions.push_back(0);
+        }
+    }
+    xdir = 1;
+    ydir = -1;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            directions.push_back(6);
+        }
+    }
+    xdir = 0;
+    ydir = 1;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            directions.push_back(2);
+        }
+    }
+    xdir = 0;
+    ydir = -1;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            directions.push_back(3);
+        }
+    }
+    xdir = -1;
+    ydir = 1;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            directions.push_back(5);
+        }
+    }
+    xdir = -1;
+    ydir = 0;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            directions.push_back(1);
+        }
+    }
+    xdir = -1;
+    ydir = -1;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            directions.push_back(7);
+        }
+    }
+    cout << directions.size() << endl;
     for (int i = 0; i < directions.size(); ++i) {
         goThroughSpaces(directions[i], x, y);
         while (isOnBoard(x,y) && board[x][y].getTile() != player && board[x][y].getTile() != EMPTY) {
             board[x][y].setTile(player);
             goThroughSpaces(directions[i],x,y);
         }
-        
+        x=row;
+        y=col;
     }
     /*
     int xstart = s.getRow();
@@ -226,67 +341,121 @@ void GameEngine::goThroughSpaces(int i, int &x, int &y){
 }
 
 bool GameEngine::checkIfValid(Space s, Tile player){
-    Tile enemy = opposite(player);
-    if(enemy == EMPTY){
-        cout << "Entered nonexisting player type, Bad entry" << endl;
-        return false;
+    int x = s.getRow();
+    int y = s.getColumn();
+
+    int xdir =1, ydir = 1;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            return true;
+        }
     }
-    
-    
-    int r = s.getRow();
-    int c = s.getColumn();
-    bool test;
-    
-    //stores which directions are valid
-    //clear before push back
-    directions.clear();
-    
-    if(checkDirection(r, c, 0, -1, enemy)){
-    //  cout << "Good Move Up" << endl;
-        directions.push_back(3);
-        return true;
+    xdir = 1;
+    ydir = 0;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            return true;
+        }
     }
-    else if(checkDirection(r, c, 0, 1, enemy)){
-    //  cout << "Good Move Down" << endl;
-        directions.push_back(2);
-        return true;
+    xdir = 1;
+    ydir = -1;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            return true;
+        }
     }
-    else if(checkDirection(r, c, -1, 0, enemy)){
-    //  cout << "Good Move Left" << endl;
-        directions.push_back(1);
-        return true;
-    }   
-    else if(checkDirection(r, c, 1, 0, enemy)){
-        //cout << "Good Move Right" << endl;
-        directions.push_back(0);
-        return true;
+    xdir = 0;
+    ydir = 1;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            return true;
+        }
     }
-    else if(checkDirection(r, c, 1, 1, enemy)){
-        //cout << "Good Move Down Right" << endl;
-        directions.push_back(4);
-        return true;
+    xdir = 0;
+    ydir = -1;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            return true;
+        }
     }
-    else if(checkDirection(r, c, 1, -1, enemy)){
-    //  cout << "Good Move Up Right" << endl;
-        directions.push_back(6);
-        return true;
+    xdir = -1;
+    ydir = 1;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            return true;
+        }
     }
-    else if(checkDirection(r, c, -1, 1, enemy)){
-    //  cout << "Good Move Down Left" << endl;
-        directions.push_back(5);
-        return true;
+    xdir = -1;
+    ydir = 0;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            return true;
+        }
     }
-    else if(checkDirection(r, c, -1, -1, enemy)){
-    //  cout << "Good Move Down Right" << endl;
-        directions.push_back(7);
-        return true;
+    xdir = -1;
+    ydir = -1;
+    if (isOnBoard(x+xdir,y+ydir) && board[x+xdir][y+ydir].getTile() == opposite(player)) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() != player && board[x+xdir+i][y+ydir+j].getTile() != EMPTY) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == player) {
+            return true;
+        }
     }
-    else{
-        //cout << "Bad Move" << endl;
-        return false;
-    }
-    //cout << "Row is " << r << endl;
-    //cout << "Column is " << c << endl;
+    return false;
 }
 
 bool GameEngine::isOnBoard(int row, int column){
@@ -339,33 +508,20 @@ void GameEngine::resetGame() {
     }
 }
 
-bool GameEngine::checkDirection(int row, int column, int xdirec, int ydirec, Tile enemycolor){
-    Space z;
-    z = board[row][column];
-    if(z.getTile()!=EMPTY){
-        //cout << "Invalid Move, spot not empty" << endl;
-        return false;
+bool GameEngine::checkDirection(int x, int y, int xdir, int ydir, Tile enemycolor){
+    if (board[x+xdir][y+ydir].getTile() == enemycolor) {
+        cout << x+xdir << y+ydir << "has the opposite" << endl;
+        int i = xdir;
+        int j = ydir;
+        while (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == enemycolor) {
+            i+=xdir;
+            j+=ydir;
+        }
+        if (isOnBoard(x+xdir+i,y+ydir+j) && board[x+xdir+i][y+ydir+j].getTile() == opposite(enemycolor)) {
+            return true;
+        }
     }
-    int x = column + xdirec;
-    int y = row + ydirec; 
-    if(x > 7 || x < 0 || y > 7 || y < 0){
-        //cout << row << " row does not exist and/or " << column << " column does not exist" << endl;
-        return false;
-    }
-    z = board[x][y];
-    if(z.getTile() != enemycolor){
-        return false;
-    }
-    while(z.getTile() == enemycolor && x > 0 && x <=7 && y > 0 && y <=7){
-        x += xdirec;
-        y += ydirec;
-        z = board[y][x];
-        //cout << "x is " << x << " and y is " << y << endl;
-    }
-    if(z.getTile() == EMPTY || x <0 || x > 7 || y < 0 || y > 7){
-        return false;
-    }
-    return true;
+    return false;
 }
 
 void GameEngine::setSpace(Tile t, int row, int column){

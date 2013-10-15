@@ -56,7 +56,7 @@ public:
     string displayBoard();
     
     
-    void makeMove(Space s, Tile player);
+    void makeMove(int, int, Tile player);
     void goThroughSpaces(int i, int &x, int &y);
     bool checkIfValid(Space s, Tile player);
     bool isOnBoard(int row, int column);

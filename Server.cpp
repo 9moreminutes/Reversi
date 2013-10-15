@@ -58,10 +58,10 @@ void Server::handleMove(string move) {
         row = move[0] - 96;
     }
     //Make player move
-    if (game.checkIfValid(Space(playerColor, row, col),playerColor)) {
+    if (game.checkIfValid(Space(playerColor, col, row),playerColor)) {
         char c = row + 64;
         cout << "Player made move at " << c << col << "..." << endl;
-        game.makeMove(Space(playerColor, row, col),playerColor);
+        game.makeMove(col-1, row-1, playerColor);
     }
     else {
         char c = row + 64;
@@ -126,7 +126,7 @@ void Server::handleMove(string move) {
             break;
         }
         cout << "Making move at " << s << "..." << endl;
-        game.makeMove(moves[0],aiColor);
+        game.makeMove(moves[0].getRow(),moves[0].getColumn(),aiColor);
         write(gameSock,(s+"\n").c_str(),s.length()+1);
     }
 }
