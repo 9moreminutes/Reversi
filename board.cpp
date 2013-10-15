@@ -5,13 +5,43 @@ GameEngine::~GameEngine() {
     
 }
 
-void GameEngine::displayBoard(){
+<<<<<<< HEAD
+void GameEngine::displayBoard(char *boardarray){
+    //total chars is 200.
+=======
+string GameEngine::displayBoard(){
+>>>>>>> 3c9773e5239e3ad9ec4c29745d468090fc47290b
     //set top row of column
-    char boardarray[190] = {' ', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '\n'};
-    int n = 18; //there are 19-1 characters per row (including '\n')
+    /*char boardarray[200] = {';',' ', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '_', ' ', '\n'};*/
+    
+    boardarray[0] = ';';
+    boardarray[1] = ' ';
+    boardarray[2] = ' ';
+    boardarray[3] = '_';
+    boardarray[4] = ' ';
+    boardarray[5] = '_';
+    boardarray[6] = ' ';
+    boardarray[7] = '_';
+    boardarray[8] = ' ';
+    boardarray[9] = '_';
+    boardarray[10] = ' ';
+    boardarray[11] = '_';
+    boardarray[12] = ' ';
+    boardarray[13] = '_';
+    boardarray[14] = ' ';
+    boardarray[15] = '_';
+    boardarray[16] = ' ';
+    boardarray[17] = '_';
+    boardarray[18] = ' ';
+    boardarray[19] = '\n';
+    
+    
+    int n = 19; //there are 20 characters per row (including '\n')
     
     //print tiles row by row
     for (int i = 0; i < board.size(); i++){
+        ++n;
+        boardarray[n] =';';
         //store number
         ++n;
         switch (i) {
@@ -86,8 +116,11 @@ void GameEngine::displayBoard(){
     ++n;
     boardarray[n] = '\n';
     
-    boardarr = boardarray;
+<<<<<<< HEAD
+=======
+    return string(boardarray);
     
+>>>>>>> 3c9773e5239e3ad9ec4c29745d468090fc47290b
 }
 
 

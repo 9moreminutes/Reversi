@@ -33,19 +33,18 @@ void Server::handleStart(string s) {
     aiColor = Tile::BLACK;
     game.resetGame();
     if (aiGame) {
-        /*aiSock = socket(AF_INET, SOCK_STREAM, 0);
+        aiSock = socket(AF_INET, SOCK_STREAM, 0);
 
+        struct hostent * aiHost;
         struct sockaddr_in aiServer;
         bzero((char *) &aiServer, sizeof(aiServer)); //clear variable data
         aiServer.sin_family = AF_INET;
         aiServer.sin_port = htons(aiPort);
-        aiServer.sin_addr.s_addr = gethostbyname(aiHostname.c_str());
-
-        if (bind(connSock, (struct sockaddr *) &server, sizeof(server)) != 0) {
-            perror("Error binding socket for ai server");
-            exit(1);
-        }
-        cout << "BOUND AI SERVER SOCKET";*/
+        aiHost = gethostbyname(aiHostname.c_str());
+        bcopy((char *)aiHost->h_addr, (char *)&aiServer.sin_addr.s_addr, aiHost->h_length);
+        if (connect(aiSock,(struct sockaddr *) &aiServer,sizeof(aiServer)) < 0) 
+            perror("Error connecting to other server");
+        cout << "Connected to aiHostname...";
     }
 }
 
@@ -280,8 +279,7 @@ void Server::handleCommand() {
     }
 
     if (command.substr(0,7) == "DISPLAY") {
-        //buffer = game.display();
-        //write(gameSock,buffer,string(buffer).length());
+        write(gameSock,game.displayBoard().c_str(),190);
         return;
     }
 
@@ -292,8 +290,8 @@ void Server::handleCommand() {
 }
 
 void Server::getCommand() {
-    bzero(buffer, 64);
-    read(gameSock, buffer, 64);
+    bzero(buffer, 256);
+    read(gameSock, buffer, 256);
 }
 
 int main(int argc, char const *argv[])
