@@ -20,6 +20,7 @@ private:
     
     Tile aiPlayer; //AI Color
     Tile opponent;
+    Tile currentTurn;
     
 public:
     AI(Tile p) {
@@ -30,6 +31,9 @@ public:
     ~AI();
     
     Space chooseMove(GameEngine game, int depth);
+    
+    void changeTurn(Tile player);
+    
 };
 
 
