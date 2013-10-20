@@ -35,8 +35,9 @@ int AI::getValue(GameEngine game, Tile player) {
 Space AI::chooseMove(GameEngine game, int depth)
 {
 	
-	if depth < 1
-		return
+	if (game.gameOver() || depth == 0){
+        return;
+    }
         
 	vector<Space> moves = game.getPossibleMoves(player);
     if isTurn(player)

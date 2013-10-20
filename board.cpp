@@ -513,6 +513,17 @@ void GameEngine::setSpace(Tile t, int row, int column){
     board[row][column].setTile(t);
 }
 
+
 Tile GameEngine::getSpace(int col, int row) {
     return board[row][col].getTile();
+}
+
+bool GameEngine::gameOver() {
+    for (int i = 0; i < board.size(); ++i){
+        for (int j = 0; i < board[j].size(); ++j){
+            if (board[i][j].getTile() == EMPTY) return false;
+            else continue;
+        }
+    }
+    return true;
 }

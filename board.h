@@ -55,7 +55,7 @@ public:
 
     string displayBoard();
     
-    
+    bool gameOver();
     void makeMove(int, int, Tile player);
     void goThroughSpaces(int i, int &x, int &y);
     bool checkIfValid(Space s, Tile player);
