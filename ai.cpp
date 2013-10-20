@@ -16,9 +16,7 @@
 //MEDIUM depth 3
 //HARD depth 5
 
-<<<<<<< HEAD
-Space AI::chooseMove(GameEngine game, int depth) {
-=======
+
 int AI::getValue(GameEngine game, Tile player) {
 	int playerValue = 0,
 		oppValue = 0;
@@ -37,14 +35,12 @@ int AI::getValue(GameEngine game, Tile player) {
 
 Space AI::chooseMove(GameEngine game, int depth)
 {
->>>>>>> c38ba33509ee7d28aad5182067e4bd60391c06cd
 	
 	if (game.gameOver() || depth == 0){
         return;
     }
-        
-<<<<<<< HEAD
-		vector<Space> moves = game.getPossibleMoves(player);
+    
+    vector<Space> moves = game.getPossibleMoves(player);
     if (currentTurn == aiPlayer)
         changeTurn(currentTurn);
         //do best move
@@ -54,17 +50,8 @@ Space AI::chooseMove(GameEngine game, int depth)
             
 }
 
+
 void AI::changeTurn(Tile player) {
     if (player == WHITE) currentTurn = BLACK;
     else currentTurn = WHITE;
 }
-=======
-	vector<Space> moves = game.getPossibleMoves(player);
-    if isTurn(player)
-        //do best move
-	else
-		//doworst move
-            
-            
-}
->>>>>>> c38ba33509ee7d28aad5182067e4bd60391c06cd
