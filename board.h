@@ -20,6 +20,7 @@ private:
     
     vector <int> directions; //holds which of the 8 directions are valid
     
+    Tile turn = WHITE;
     
 public:
     //constructor, initializes board
@@ -68,6 +69,8 @@ public:
     void drawBoard();
     void setSpace(Tile t, int row, int column);
     Tile getSpace(int,int);
+    bool isTurn(Tile);
+    void changeTurn();
 };
 
 #endif

@@ -39,8 +39,8 @@ Space AI::chooseMove(GameEngine game, int depth)
         return;
     }
         
-	vector<Space> moves = game.getPossibleMoves(player);
-    if isTurn(player)
+	vector<Space> moves = game.showPossibleMoves(player);
+    if (game.isTurn(player))
         //do best move
 	else
 		//doworst move

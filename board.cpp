@@ -517,6 +517,19 @@ Tile GameEngine::getSpace(int col, int row) {
     return board[row][col].getTile();
 }
 
+bool GameEngine::isTurn(Tile player) {
+    if (turn == player)
+        return true;
+    return false;
+}
+
+void GameEngine::changeTurn() {
+    if (turn == WHITE)
+        turn = BLACK;
+    else
+        turn = WHITE;
+}
+
 bool GameEngine::gameOver() {
     for (int i = 0; i < board.size(); ++i){
         for (int j = 0; i < board[j].size(); ++j){
