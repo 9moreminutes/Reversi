@@ -48,3 +48,80 @@ Position worst_move(vector<vector<char_importance>> board){
   }
   return position;
 }
+
+
+int AI::Minimax(XON board[3][3], XON player, int depth)
+{
+	XON newboard[3][3];
+	
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			newboard[i][j] = board[i][j];
+		}
+	}
+    
+	if ((this->GameOver(newboard)) || (depth == 0))
+	{
+		return this->Evaluate(newboard);
+	}
+	if(false){}
+	else
+	{
+		if (this->minPlayer != player) // Maximize
+		{
+			int maxValue = -1000;
+            
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					if (newboard[i][j] == n)
+					{
+						newboard[i][j] = player;
+						int score = this->Minimax(newboard,OtherPlayer(player), depth - 1);
+                        
+						if (score > maxValue)
+						{
+							maxValue = score;
+						}
+                        
+						newboard[i][j] = n;
+					}
+				}
+			}
+            
+			return maxValue;
+		}
+		else if (this->minPlayer == player) // Minimize
+		{
+			int minValue = 1000;
+            
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					if (newboard[i][j] == n)
+					{
+						newboard[i][j] = player;
+						int score = this->Minimax(newboard, OtherPlayer(player), depth - 1);
+                        
+						if (score < minValue)
+						{
+							minValue = score;
+						}
+                        
+						newboard[i][j] = n;
+					}
+				}
+			}
+            
+			return minValue;
+		}
+		else 
+		{
+			return 0;
+		}
+	}
+}
