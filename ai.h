@@ -16,10 +16,11 @@ private:
         {6, -3, 4, 0, 0, 4, -3, 6},
         {8, -4, 7, 4, 4, 7, -4, 8},
         {-8, -24, -4, -3, -3, -4, -24, -8},
-        {99, -8, 8, 6, 6, 8, -8, -99} };
+        {s99, -8, 8, 6, 6, 8, -8, -99} };
     
     Tile aiPlayer; //AI Color
     Tile opponent;
+    Tile currentTurn;
     
 public:
     AI(Tile p) {
@@ -28,8 +29,11 @@ public:
         else opponent = WHITE;
     }
     ~AI();
-    int getValue(GameEngine game)
+    int getValue(GameEngine game);
     Space chooseMove(GameEngine game, int depth);
+    
+    void changeTurn(Tile player);
+    
 };
 
 
