@@ -16,7 +16,7 @@
 //MEDIUM depth 3
 //HARD depth 5
 
-Space chooseMove(GameEngine game, Tile player, int depth)
+Space AI::chooseMove(GameEngine game, int depth)
 {
 	
 	if depth < 1

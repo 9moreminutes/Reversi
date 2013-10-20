@@ -18,9 +18,18 @@ private:
         {-8, -24, -4, -3, -3, -4, -24, -8},
         {99, -8, 8, 6, 6, 8, -8, -99} };
     
+    Tile aiPlayer; //AI Color
+    Tile opponent;
+    
 public:
-    AI();
+    AI(Tile p) {
+        aiPlayer = p;
+        if (p == WHITE) opponent = BLACK;
+        else opponent = WHITE;
+    }
     ~AI();
+    
+    Space chooseMove(GameEngine game, int depth);
 };
 
 
