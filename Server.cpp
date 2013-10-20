@@ -72,8 +72,15 @@ void Server::handleMove(string move) {
     //Make AI move
     vector<Space> moves = game.showPossibleMoves(aiColor);
     if(!moves.empty()) {
+        Space newMove;
+        if (diff == EASY)
+            newMove = ai.chooseMove(game,1,aiColor);
+        else if (diff == MEDIUM)
+            newMove = ai.chooseMove(game,3,aiColor);
+        else
+            newMove = ai.chooseMove(game,5,aiColor);
         string s = "";
-        switch(moves[0].getColumn()) {
+        switch(newMove.getColumn()) {
             case Column::a:
                 s+="a ";
             break;
@@ -99,7 +106,7 @@ void Server::handleMove(string move) {
                 s+="h ";
             break;
         }
-        switch(moves[0].getRow()) {
+        switch(newMove.getRow()) {
             case Row::ONE:
                 s+="1";
             break;
@@ -126,8 +133,11 @@ void Server::handleMove(string move) {
             break;
         }
         cout << "Making move at " << s << "..." << endl;
-        game.makeMove(moves[0].getRow(),moves[0].getColumn(),aiColor);
+        game.makeMove(newMove.getRow(),newMove.getColumn(),aiColor);
         write(gameSock,(s+"\n").c_str(),s.length()+1);
+    }
+    else {
+        write(gameSock,";No possible move\n",18);
     }
 }
 
@@ -234,7 +244,7 @@ void Server::handleCommand() {
 
     if (command.substr(0,4) == "EXIT") {
         cout << "EXIT command recieved...exiting" << endl;
-        donef = true;
+        gameover = true;
         return;
     }
 
@@ -293,7 +303,7 @@ void Server::getCommand() {
     read(gameSock, buffer, 256);
 }
 
-bool done() {
+bool Server::done() {
     return (gameover || game.gameOver());
 }
 

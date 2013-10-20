@@ -71,6 +71,7 @@ public:
     Tile getSpace(int,int);
     bool isTurn(Tile);
     void changeTurn();
+    Tile opposite(Tile);
 };
 
 #endif

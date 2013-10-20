@@ -15,7 +15,9 @@
 //EASY depth 1
 //MEDIUM depth 3
 //HARD depth 5
+AI::~AI() {
 
+}
 
 int AI::getValue(GameEngine game, Tile player) {
 	int playerValue = 0,
@@ -25,7 +27,7 @@ int AI::getValue(GameEngine game, Tile player) {
 			if (game.getSpace(i,j) == player) {
 				playerValue += values[i][j];
 			}
-			else if (game.getSpace(i,j) == opposite(player)) {
+			else if (game.getSpace(i,j) == game.opposite(player)) {
 				oppValue += values[i][j];
 			}
 		}
@@ -33,25 +35,51 @@ int AI::getValue(GameEngine game, Tile player) {
 	return playerValue - oppValue;
 }
 
-Space AI::chooseMove(GameEngine game, int depth)
-{
-	
-	if (game.gameOver() || depth == 0){
-        return;
-    }
-        
+Space AI::chooseMove(GameEngine game, int depth, Tile player) {
 	vector<Space> moves = game.showPossibleMoves(player);
-    if (game.isTurn(player))
-
-        //do best move
-    else
-        //doworst move
-            
-            
+	Space bestMove;
+	int bestval = -1000;
+	for (int i = 0 ; i < moves.size() ; ++i) {
+		game.makeMove(moves[i].getRow(), moves[i].getColumn(), player);
+		int tmp = minimax(game, depth-1, player);
+		if (tmp > bestval) {
+			bestMove = moves[i];
+			bestval = tmp;
+		}
+		game.undoMove();
+	}
+    return bestMove;            
 }
 
+int AI::minimax(GameEngine game, int depth, Tile player) {
+	if (game.gameOver() || depth == 0){
+        return getValue(game, player);
+    }
 
-void AI::changeTurn(Tile player) {
-    if (player == WHITE) currentTurn = BLACK;
-    else currentTurn = WHITE;
+    vector<Space> moves = game.showPossibleMoves(player);
+    if (game.isTurn(player)) {
+    	int bestval = -1000;
+    	for (int i = 0 ; i < moves.size() ; ++i) {
+			game.makeMove(moves[i].getRow(), moves[i].getColumn(), player);
+			int tmp = minimax(game, depth-1, game.opposite(player));
+			if (tmp > bestval) {
+				bestval = tmp;
+			}
+			game.undoMove();
+		}
+		return bestval;
+    }
+    else {
+    	int bestval = 1000;
+    	for (int i = 0 ; i < moves.size() ; ++i) {
+			game.makeMove(moves[i].getRow(), moves[i].getColumn(), player);
+			int tmp = minimax(game, depth-1, game.opposite(player));
+			if (tmp < bestval) {
+				bestval = tmp;
+			}
+			game.undoMove();
+		}
+		return bestval;
+    }
+    return 0;
 }

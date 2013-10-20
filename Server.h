@@ -13,6 +13,7 @@
 #include <string.h>
 #include "Space.h"
 #include "board.h"
+#include "ai.h"
 
 using namespace std;
 
@@ -28,8 +29,8 @@ private:
                aiDiff = Difficulty::EASY;
     bool started = false,
          aiGame = false,
-         donef = gameover;
-
+         gameover = false;
+    AI ai;
 
     int connSock, 
         aiSock, 
