@@ -293,6 +293,10 @@ void Server::getCommand() {
     read(gameSock, buffer, 256);
 }
 
+bool done() {
+    return (gameover || game.gameOver());
+}
+
 int main(int argc, char const *argv[])
 {
     Server server;

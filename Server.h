@@ -28,7 +28,7 @@ private:
                aiDiff = Difficulty::EASY;
     bool started = false,
          aiGame = false,
-         donef = false;
+         donef = gameover;
 
 
     int connSock, 
@@ -55,7 +55,7 @@ public:
     void waitForConnection();
     void handleCommand();
     void getCommand();
-    bool done() {return donef;}
+    bool done();
 };
 
 #endif

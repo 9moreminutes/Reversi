@@ -67,6 +67,7 @@ public:
     bool checkDirection(int row, int column, int xdirec, int ydirec, Tile enemycolor);
     void drawBoard();
     void setSpace(Tile t, int row, int column);
+    Tile getSpace(int,int);
 };
 
 #endif

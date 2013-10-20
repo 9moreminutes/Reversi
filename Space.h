@@ -109,4 +109,18 @@ class Space{
         }
 };
 
+Tile opposite(Tile color){
+    Tile tile;
+    if (color == WHITE){
+        tile = BLACK;       
+    }
+    else if (color == BLACK){
+        tile = WHITE;
+    }
+    else{
+        tile = EMPTY;
+    }
+    return tile;
+}
+
 #endif
