@@ -28,7 +28,7 @@ public:
         else opponent = WHITE;
     }
     ~AI();
-    
+    int getValue(GameEngine game)
     Space chooseMove(GameEngine game, int depth);
 };
 
