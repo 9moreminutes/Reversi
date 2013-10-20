@@ -16,17 +16,33 @@
 //MEDIUM depth 3
 //HARD depth 5
 
+int AI::getValue(GameEngine game, Tile player) {
+	int playerValue = 0,
+		oppValue = 0;
+	for (int i = 0 ; i < 8 ; ++i) {
+		for (int j = 0 ; j < 8 ; ++j) {
+			if (game.getSpace(i,j) == player) {
+				playerValue += values[i][j];
+			}
+			else if (game.getSpace(i,j) == opposite(player)) {
+				oppValue += values[i][j];
+			}
+		}
+	}
+	return playerValue - oppValue;
+}
+
 Space AI::chooseMove(GameEngine game, int depth)
 {
 	
 	if depth < 1
 		return
         
-		vector<Space> moves = game.getPossibleMoves(player);
+	vector<Space> moves = game.getPossibleMoves(player);
     if isTurn(player)
         //do best move
-		else
-			//doworst move
+	else
+		//doworst move
             
             
-            }
+}
