@@ -17,10 +17,10 @@ Running
 
 To run the server run the command 
 
-`./Reversi`
+`./Reversi <port>`
 
-after compilation. In a new window, use telnet to connect to your local ip address using the port 7349. I.E.:
+after compilation. In a new window, use telnet to connect to your local ip address using the port you chose. Example:
 
-`telnet 192.168.1.1 7349`
+`telnet 192.168.1.1 <port>`
 
 You can then use commands (like `HUMAN-AI` to start the game) and get responses.
