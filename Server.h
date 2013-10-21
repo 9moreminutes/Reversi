@@ -44,19 +44,21 @@ private:
     struct sockaddr_in client, server;
 
     /* Functions *************/
-    void handleStart(string);
+    void handleStart();
     void handleMove(string);
+    void makeAIMove();
     bool isValid(string);
     bool checkMove(string);
     bool checkStart(string);
 
 public:
-    Server();
+    Server(char *);
     ~Server();
     void waitForConnection();
     void handleCommand();
     void getCommand();
     bool done();
+    void runAI();
 };
 
 #endif

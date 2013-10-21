@@ -110,8 +110,6 @@ void GameEngine::drawBoard(){
 //flip tiles and update the board
 void GameEngine::makeMove(int row, int col, Tile player){
     //check if valid move
-    cout << "ROW:" << row << endl;
-    cout << "COL:" << col << endl;
     if (!checkIfValid(Space(player,row+1,col+1), player)){
         return; //do nothing.
     }
@@ -227,7 +225,6 @@ void GameEngine::makeMove(int row, int col, Tile player){
             directions.push_back(7);
         }
     }
-    cout << directions.size() << endl;
     for (int i = 0; i < directions.size(); ++i) {
         goThroughSpaces(directions[i], x, y);
         while (isOnBoard(x,y) && board[x][y].getTile() != player && board[x][y].getTile() != EMPTY) {
@@ -419,15 +416,11 @@ vector <Space> GameEngine::showPossibleMoves(Tile player){
         for(int j = 0; j < 8; j++){
             if(board[i][j].getTile() == EMPTY){
                 Space s = Space(player, i+1, j+1);
-                cout << s.getRow() << s.getColumn() << endl;
                 if(checkIfValid(s, player)){
                     result.push_back(s);
                 }
             }
         }
-    }
-    for(int k = 0; k < result.size(); k++){
-        cout << result[k].getRow() << result[k].getColumn() << endl;
     }
     return result;
 }
@@ -510,4 +503,22 @@ Tile GameEngine::opposite(Tile color){
         tile = EMPTY;
     }
     return tile;
+}
+
+string GameEngine::tallyPoints() {
+    int whitePts = 0,
+        blackPts = 0;
+    for (int i = 0 ; i < 8 ; i++) {
+        for (int j = 0 ; j < 8 ; j++) {
+            if (board[i][j].getTile() == WHITE) {
+                ++whitePts;
+            }
+            else if (board[i][j].getTile() == BLACK) {
+                blackPts++;
+            }
+        }
+    }
+    stringstream ss;
+    ss << "; White: " << whitePts << " | Black: " << blackPts << "\n";
+    return ss.str();
 }

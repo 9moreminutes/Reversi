@@ -1,12 +1,12 @@
 #include "Server.h"
 
-Server::Server() {
+Server::Server(char * p) {
     //make connection socket
     connSock = socket(AF_INET, SOCK_STREAM, 0);
     if (connSock < 0) {
         perror("Error making socket");
     }
-    port = 7349;
+    port = atoi(p);
 
     //set server address
     bzero((char *) &server, sizeof(server)); //clear variable data
@@ -28,11 +28,12 @@ Server::~Server() {
     close(gameSock);
 }
 
-void Server::handleStart(string s) {
+void Server::handleStart() {
     playerColor = Tile::WHITE;
     aiColor = Tile::BLACK;
     game.resetGame();
     if (aiGame) {
+        cout << "Starting game against AI at " << aiHostname << ":" << aiPort << "...";
         aiSock = socket(AF_INET, SOCK_STREAM, 0);
 
         struct hostent * aiHost;
@@ -44,7 +45,94 @@ void Server::handleStart(string s) {
         bcopy((char *)aiHost->h_addr, (char *)&aiServer.sin_addr.s_addr, aiHost->h_length);
         if (connect(aiSock,(struct sockaddr *) &aiServer,sizeof(aiServer)) < 0) 
             perror("Error connecting to other server");
-        cout << "Connected to aiHostname..." << endl;
+        cout << "Connected to " << aiHostname << "..." << endl;
+        aiColor = WHITE;
+        playerColor = BLACK;
+        runAI();
+    }
+}
+
+void Server::runAI() {
+    write(aiSock,"HUMAN-AI",8);
+    Space first;
+    if (aiDiff == EASY) {
+        first = ai.chooseMove(game, 1, aiColor);
+    }
+    else if (aiDiff == MEDIUM) {
+        first = ai.chooseMove(game, 3, aiColor);
+    }
+    else {
+        first = ai.chooseMove(game, 5, aiColor);
+    }
+    game.makeMove(first.getRow(), first.getColumn(), aiColor);
+    string s = "";
+    switch(first.getColumn()) {
+        case Column::a:
+            s+="a ";
+        break;
+        case Column::b:
+            s+="b ";
+        break;
+        case Column::c:
+            s+="c ";
+        break;
+        case Column::d:
+            s+="d ";
+        break;
+        case Column::e:
+            s+="e ";
+        break;
+        case Column::f:
+            s+="f ";
+        break;
+        case Column::g:
+            s+="g ";
+        break;
+        case Column::h:
+            s+="h ";
+        break;
+    }
+    switch(first.getRow()) {
+        case Row::ONE:
+            s+="1";
+        break;
+        case Row::TWO:
+            s+="2";
+        break;
+        case Row::THREE:
+            s+="3";
+        break;
+        case Row::FOUR:
+            s+="4";
+        break;
+        case Row::FIVE:
+            s+="5";
+        break;
+        case Row::SIX:
+            s+="6";
+        break;
+        case Row::SEVEN:
+            s+="7";
+        break;
+        case Row::EIGHT:
+            s+="8";
+        break;
+    }
+    sleep(1);
+    if (aiDiff == EASY) {
+        write(aiSock, "EASY", 4);
+    }
+    else if (aiDiff == MEDIUM) {
+        write(aiSock, "MEDIUM", 6);
+    }
+    else {
+        write(aiSock, "HARD", 4);
+    }
+    sleep(1);
+    write(aiSock, s.c_str(), 3);
+    while(!done()) {
+        getCommand();
+        handleCommand();
     }
 }
 
@@ -69,6 +157,11 @@ void Server::handleMove(string move) {
         write(gameSock,"INVALID\n",8);
         return;
     }
+    if (aiGame) {
+        write(gameSock,game.displayBoard().c_str(),200);
+        write(gameSock,game.tallyPoints().c_str(),24);
+    }
+
     //Make AI move
     vector<Space> moves = game.showPossibleMoves(aiColor);
     if(!moves.empty()) {
@@ -134,10 +227,21 @@ void Server::handleMove(string move) {
         }
         cout << "Making move at " << s << "..." << endl;
         game.makeMove(newMove.getRow(),newMove.getColumn(),aiColor);
-        write(gameSock,(s+"\n").c_str(),s.length()+1);
+        if(!aiGame)
+            write(gameSock,(s+"\n").c_str(),s.length()+1);
+        else
+            write(aiSock,(s).c_str(),s.length()+1);
+
+        if (aiGame) {
+            write(gameSock,game.displayBoard().c_str(),200);
+            write(gameSock,game.tallyPoints().c_str(),24);
+        }
     }
     else {
         write(gameSock,";No possible move\n",18);
+        if (aiGame) {
+            write(aiSock,";No possible move\n",18);
+        }
     }
 }
 
@@ -164,12 +268,12 @@ bool Server::checkStart(string command) {
         return true;
     }
     if (command.substr(0,5) == "AI-AI") {
-        command.erase(0,5); // remove AI-AI
-
+        command.erase(0,6); // remove AI-AI
+        cout << command << endl;
         int space = command.find(' ');
         string hostname = command.substr(0,space);
-        command.erase(0,space); //remove hostname
-
+        command.erase(0,space+1); //remove hostname
+        cout << command << endl;
         //check for port
         for (int i = 0; i < command.size(); ++i) {
             if(!isdigit(command[i])) {
@@ -181,8 +285,8 @@ bool Server::checkStart(string command) {
             }
         }
         string portNum = command.substr(0,space);
-        command.erase(0,space); //remove port
-
+        command.erase(0,space+1); //remove port
+        cout << command << endl;
         //check difficulty 1
         Difficulty newdiff;
         if (command.substr(0,4) == "EASY") {
@@ -214,7 +318,6 @@ bool Server::checkStart(string command) {
         else {
             return false;
         }
-        cout << "Starting game against AI at " << hostname << ":" << portNum << "...";
         aiHostname = hostname;
         aiPort = atoi(portNum.c_str());
         diff = newdiff;
@@ -232,13 +335,96 @@ void Server::waitForConnection() {
     write(gameSock,"WELCOME\n", 8);
 }
 
+void Server::makeAIMove() {
+    vector<Space> moves = game.showPossibleMoves(aiColor);
+    if(!moves.empty()) {
+        Space newMove;
+        if (diff == EASY)
+            newMove = ai.chooseMove(game,1,aiColor);
+        else if (diff == MEDIUM)
+            newMove = ai.chooseMove(game,3,aiColor);
+        else
+            newMove = ai.chooseMove(game,5,aiColor);
+        string s = "";
+        switch(newMove.getColumn()) {
+            case Column::a:
+                s+="a ";
+            break;
+            case Column::b:
+                s+="b ";
+            break;
+            case Column::c:
+                s+="c ";
+            break;
+            case Column::d:
+                s+="d ";
+            break;
+            case Column::e:
+                s+="e ";
+            break;
+            case Column::f:
+                s+="f ";
+            break;
+            case Column::g:
+                s+="g ";
+            break;
+            case Column::h:
+                s+="h ";
+            break;
+        }
+        switch(newMove.getRow()) {
+            case Row::ONE:
+                s+="1";
+            break;
+            case Row::TWO:
+                s+="2";
+            break;
+            case Row::THREE:
+                s+="3";
+            break;
+            case Row::FOUR:
+                s+="4";
+            break;
+            case Row::FIVE:
+                s+="5";
+            break;
+            case Row::SIX:
+                s+="6";
+            break;
+            case Row::SEVEN:
+                s+="7";
+            break;
+            case Row::EIGHT:
+                s+="8";
+            break;
+        }
+        cout << "Making move at " << s << "..." << endl;
+        game.makeMove(newMove.getRow(),newMove.getColumn(),aiColor);
+        if(!aiGame)
+            write(gameSock,(s+"\n").c_str(),s.length()+1);
+        else
+            write(aiSock,(s).c_str(),s.length()+1);
+
+        if (aiGame) {
+            write(gameSock,game.displayBoard().c_str(),200);
+            write(gameSock,game.tallyPoints().c_str(),24);
+        }
+    }
+    else {
+        write(gameSock,";No possible move\n",18);
+        if (aiGame) {
+            write(aiSock,";No possible move\n",18);
+        }
+    }
+}
 void Server::handleCommand() {
     //convert char[] to string
     string command(buffer);
 
     //make sure command is valid
     if (!isValid(command)) {
-        write(gameSock,"ILLEGAL\n",8);
+        if (!aiGame)
+            write(gameSock,"ILLEGAL\n",8);
         return;
     }
 
@@ -254,8 +440,14 @@ void Server::handleCommand() {
                 write(gameSock,"OK\n",3);
                 cout << "Starting human vs. AI game..." << endl;
                 started = true;
-                handleStart(command);
-            } 
+                handleStart();
+            }
+            else {
+                write(gameSock,"OK\n",3);
+                cout << "Starting AI vs. AI game..." << endl;
+                started = true;
+                handleStart();
+            }
         }
         else {
             write(gameSock,"ILLEGAL\n",8);
@@ -289,6 +481,7 @@ void Server::handleCommand() {
 
     if (command.substr(0,7) == "DISPLAY") {
         write(gameSock,game.displayBoard().c_str(),200);
+        write(gameSock,game.tallyPoints().c_str(),24);
         return;
     }
 
@@ -300,16 +493,19 @@ void Server::handleCommand() {
 
 void Server::getCommand() {
     bzero(buffer, 256);
-    read(gameSock, buffer, 256);
+    if(!aiGame)
+        read(gameSock, buffer, 256);
+    else
+        read(aiSock, buffer, 256);
 }
 
 bool Server::done() {
     return (gameover || game.gameOver());
 }
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
-    Server server;
+    Server server(argv[1]);
     server.waitForConnection();
     while(!server.done()) {
         server.getCommand();

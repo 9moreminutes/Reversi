@@ -5,6 +5,7 @@
 #include <stack>
 #include <string>
 #include <iostream>
+#include <sstream>
 
 #include "Space.h"
 
@@ -63,7 +64,7 @@ public:
     bool isOnBoard(int row, int column);
     void undoMove(); // pops move from stack and undoes
     vector<Space> showPossibleMoves(Tile player); //if empty, no moves
-    int tallyPoints();
+    string tallyPoints();
     void resetGame();
     bool checkDirection(int row, int column, int xdirec, int ydirec, Tile enemycolor);
     void drawBoard();
