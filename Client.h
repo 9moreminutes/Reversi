@@ -20,6 +20,7 @@ class Client
 public:
     Client();
     void serverConnect();
+    char* stripExtra(char*);
     void makeBoard(char*);
     void makeMove(int,char);
     void startGame();

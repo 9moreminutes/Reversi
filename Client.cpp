@@ -60,10 +60,10 @@ void Client::makeBoard(char* input)
     int index = 0;
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-            if ((c=input[index]) == EMPTY) {
+            if ((c=input[index]) == '_') {
                 grid[i][j] = EMPTY;
             }
-            else if (c == WHITE) {
+            else if (c == 'O') {
                 grid[i][j] = WHITE;
             }
             else {
@@ -85,7 +85,7 @@ void Client::getBoard()
 void Client::makeMove(int row, char col) //NOT TESTED
 {
     write(connSock,string(row)+" "+string(col),sizeof(buffer));
-
+    getBoard()
 }
 
 void Client::startGame() //NOT TESTED
@@ -96,4 +96,17 @@ void Client::startGame() //NOT TESTED
 void Client::quitGame() //NOT TESTED
 {
     write(connSock,"EXIT",sizeof(buffer));
+}
+
+int main(int argc, char const *argv[])
+{
+    Client c();
+    c.serverConnect();
+    c.startGame();
+    while(true) {
+        c.getInput(); // waits for a button press then makes a move and requests board from server
+        c.updateBoard() // paints the new board onto screen
+    }
+    
+    return 0;
 }

@@ -8,6 +8,7 @@
 
 #include "GUI.h"    // for Simple_window only (doesn't really belong in Window.h)
 #include "Graph.h"
+#include "Client.h"
 
 using namespace Graph_lib;
 
@@ -19,7 +20,7 @@ struct Simple_window : Window {
     bool wait_for_button(); // simple event loop
 
 private:
-    Button next_button;     // the "next" button
+    vector<vector<Button> > board;     // the "next" button
     bool button_pushed;     // implementation detail
 
     static void cb_next(Address, Address); // callback for next_button

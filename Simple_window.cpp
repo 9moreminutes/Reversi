@@ -12,6 +12,11 @@ Simple_window::Simple_window(Point xy, int w, int h, const string& title) :
     next_button(Point(x_max()-70,0), 70, 20, "Next", cb_next),
     button_pushed(false)
 {
+    for(int i = 0 ; i < 8 ; i++) {
+        for(int j = 0 ; j < 8 ; j++) {
+            buttons.push_back(Button(Point(0+((w/8)*j)),(w/8),(h/8),"A1", cb_next));
+        }
+    }
     attach(next_button);
 }
 
