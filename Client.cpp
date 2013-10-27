@@ -37,40 +37,63 @@ void Client::serverConnect()
     }
 }
 
+char *Client::stripExtra(char* input) {
+    for (int i = 0, j = 23; i < 8; i+=8 j+=20){
+        input[i]=input[j];
+        input[i+1]=input[j+2];
+        input[i+2]=input[j+4];
+        input[i+3]=input[j+6];
+        input[i+4]=input[j+8];
+        input[i+5]=input[j+10];
+        input[i+6]=input[j+12];
+        input[i+7]=input[j+14];
+    }
+    
+
+    return input;
+}
+
 void Client::makeBoard(char* input)
 {
-    Stream s = input;
+    input = stripExtra(input);
     char c;
-    for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-            if ((c<<s.get()) == EMPTY)
+    int index = 0;
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if ((c=input[index]) == EMPTY) {
                 grid[i][j] = EMPTY;
-            else if (c == WHITE)
+            }
+            else if (c == WHITE) {
                 grid[i][j] = WHITE;
-            else
+            }
+            else {
                 grid[i][j] = BLACK;
+            }
+            index++;
+        }
+    }
 }
 
 void Client::getBoard()
 {
-    write(connSock,"getBoard",sizeof(buffer));
-    bzero(buffer, 64);
+    write(connSock,"DISPLAY",sizeof(buffer));
+    bzero(buffer, 256);
     read(connSock,buffer,sizeof(buffer));
     makeBoard(buffer);
 }
 
 void Client::makeMove(int row, char col) //NOT TESTED
 {
-    write(connSock,"move "+row+" "+col,sizeof(buffer));
+    write(connSock,string(row)+" "+string(col),sizeof(buffer));
 
 }
 
 void Client::startGame() //NOT TESTED
 {
-    write(connSock,"start",sizeof(buffer));
+    write(connSock,"HUMAN-AI",sizeof(buffer));
 }
 
 void Client::quitGame() //NOT TESTED
 {
-    write(connSock,"quit",sizeof(buffer));
+    write(connSock,"EXIT",sizeof(buffer));
 }

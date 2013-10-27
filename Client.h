@@ -11,6 +11,9 @@
 #include <string.h>
 #include <sys/types.h>
 #include "board.h"
+#include "Graph.h"
+#include "Simple_window.h"
+#include "Window.h"
 
 class Client
 {
@@ -26,8 +29,8 @@ public:
 private:
     SOCKET connSock;
     SOCKADDR_IN client;
-    int grid[8][8]; // For use by GUI app
-    char buffer[64];
+    Tile grid[8][8]; // For use by GUI app
+    char buffer[256];
 };
 
 #endif // CLIENT_H
