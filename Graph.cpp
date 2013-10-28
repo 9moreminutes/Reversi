@@ -1,3 +1,5 @@
+
+
 //
 // This is a GUI support code to the chapters 12-16 of the book
 // "Programming -- Principles and Practice Using C++" by Bjarne Stroustrup
@@ -6,6 +8,8 @@
 #include <FL/Fl_GIF_Image.H>
 #include <FL/Fl_JPEG_Image.H>
 #include "Graph.h"
+#include <cstdlib>
+#include <cstring>
 
 //------------------------------------------------------------------------------
 
@@ -221,7 +225,6 @@ void Rectangle::draw_lines() const
     if (fill_color().visibility()) {    // fill
         fl_color(fill_color().as_int());
         fl_rectf(point(0).x,point(0).y,w,h);
-        fl_color(color().as_int());    // reset color
     }
 
     if (color().visibility()) {    // lines on top of fill
@@ -249,32 +252,16 @@ Point Circle::center() const
 
 void Circle::draw_lines() const
 {
-  	if (fill_color().visibility()) {	// fill
-		fl_color(fill_color().as_int());
-		fl_pie(point(0).x,point(0).y,r+r-1,r+r-1,0,360);
-		fl_color(color().as_int());	// reset color
-	}
-
-	if (color().visibility()) {
-		fl_color(color().as_int());
-		fl_arc(point(0).x,point(0).y,r+r,r+r,0,360);
-	}
+    if (color().visibility())
+        fl_arc(point(0).x,point(0).y,r+r,r+r,0,360);
 }
 
 //------------------------------------------------------------------------------
 
 void Ellipse::draw_lines() const
 {
-   if (fill_color().visibility()) {	// fill
-		fl_color(fill_color().as_int());
-		fl_pie(point(0).x,point(0).y,w+w-1,h+h-1,0,360);
-		fl_color(color().as_int());	// reset color
-	}
-
-	if (color().visibility()) {
-		fl_color(color().as_int());
-		fl_arc(point(0).x,point(0).y,w+w,h+h,0,360);
-	}
+    if (color().visibility())
+        fl_arc(point(0).x,point(0).y,w+w,h+h,0,360);
 }
 
 //------------------------------------------------------------------------------
@@ -300,7 +287,7 @@ Axis::Axis(Orientation d, Point xy, int length, int n, string lab) :
         Shape::add(xy); // axis line
         Shape::add(Point(xy.x+length,xy.y));
 
-        if (0<n) {      // add notches
+        if (1<n) {      // add notches
             int dist = length/n;
             int x = xy.x+dist;
             for (int i = 0; i<n; ++i) {
@@ -317,7 +304,7 @@ Axis::Axis(Orientation d, Point xy, int length, int n, string lab) :
         Shape::add(xy); // a y-axis goes up
         Shape::add(Point(xy.x,xy.y-length));
 
-        if (0<n) {      // add notches
+        if (1<n) {      // add notches
             int dist = length/n;
             int y = xy.y-dist;
             for (int i = 0; i<n; ++i) {
@@ -461,5 +448,3 @@ void Image::draw_lines() const
 //------------------------------------------------------------------------------
 
 } // of namespace Graph_lib
-
-

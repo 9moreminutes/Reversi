@@ -1,3 +1,5 @@
+
+
 //
 // This is a GUI support code to the chapters 12-16 of the book
 // "Programming -- Principles and Practice Using C++" by Bjarne Stroustrup
@@ -9,7 +11,7 @@
 #include <FL/fl_draw.H>
 #include <FL/Fl_Image.H>
 #include "Point.h"
-#include "../std_lib_facilities.h"
+#include "std_lib_facilities.h"
 
 namespace Graph_lib {
 
@@ -63,7 +65,7 @@ struct Line_style {
         dash=FL_DASH,              // - - - -
         dot=FL_DOT,                // ....... 
         dashdot=FL_DASHDOT,        // - . - . 
-        dashdotdot=FL_DASHDOTDOT,  // -..-..
+        dashdotdot=FL_DASHDOTDOT  // -..-..
     };
 
     Line_style(Line_style_type ss) :s(ss), w(0) { }
@@ -135,10 +137,6 @@ public:
     const T& operator[](int i) const { return *v[i]; }
 
     int size() const { return v.size(); }
-
-private:	// prevent copying
-	Vector_ref(const Vector<T>&);
-	Vector_ref& operator=(const Vector<T>&);
 };
 
 //------------------------------------------------------------------------------
@@ -280,52 +278,40 @@ struct Axis : Shape {
 
 //------------------------------------------------------------------------------
 
-
 struct Circle : Shape {
-	Circle(Point p, int rr)	// center and radius
-		:r(rr) { add(Point(p.x-r,p.y-r)); }
+    Circle(Point p, int rr);    // center and radius
 
-	void draw_lines() const;
+    void draw_lines() const;
 
-	Point center() const;
-
-	void set_radius(int rr) { set_point(0,Point(center().x-rr,center().y-rr)); r=rr;  }
-	int radius() const { return r; }
+    Point center() const ; 
+    int radius() const { return r; }
+    void set_radius(int rr) { r=rr; }
 private:
-	int r;
+    int r;
 };
 
 //------------------------------------------------------------------------------
 
 struct Ellipse : Shape {
-	Ellipse(Point p, int ww, int hh)	// center, min, and max distance from center
-		:w(ww), h(hh) { add(Point(p.x-ww,p.y-hh)); }
+    Ellipse(Point p, int w, int h)    // center, min, and max distance from center
+        : w(w), h(h)
+    { 
+        add(Point(p.x-w,p.y-h));
+    }
 
-	void draw_lines() const;
+    void draw_lines() const;
 
-	Point center() const { return Point(point(0).x+w,point(0).y+h); }
-	Point focus1() const {
-			if (h<=w)// foci are on the x-axis:
-					return Point(center().x+int(sqrt(double(w*w-h*h))),center().y);
-			else	// foci are on the y-axis:
-					return Point(center().x,center().y+int(sqrt(double(h*h-w*w))));
-	}
+    Point center() const { return Point(point(0).x+w,point(0).y+h); }
+    Point focus1() const { return Point(center().x+int(sqrt(double(w*w-h*h))),center().y); }
+    Point focus2() const { return Point(center().x-int(sqrt(double(w*w-h*h))),center().y); }
 
-	Point focus2() const {
-			if (h<=w)
-					return Point(center().x-int(sqrt(double(w*w-h*h))),center().y);
-			else
-					return Point(center().x,center().y-int(sqrt(double(h*h-w*w))));
-	}
-	//Point focus2() const { return Point(center().x-int(sqrt(double(abs(w*w-h*h)))),center().y); }
-	
-	void set_major(int ww) { set_point(0,Point(center().x-ww,center().y-h)); w=ww; }
-	int major() const { return w; }
-	void set_minor(int hh) { set_point(0,Point(center().x-w,center().y-hh)); h=hh; }
-	int minor() const { return h; }
+    void set_major(int ww) { w=ww; }
+    int major() const { return w; }
+    void set_minor(int hh) { h=hh; }
+    int minor() const { return h; }
 private:
-	int w;
-	int h;
+    int w;
+    int h;
 };
 
 //------------------------------------------------------------------------------
@@ -389,4 +375,3 @@ struct Bad_image : Fl_Image {
 } // of namespace Graph_lib
 
 #endif
-

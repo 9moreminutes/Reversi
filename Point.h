@@ -1,20 +1,24 @@
-#ifndef POINT_H
-#define POINT_H
 
-#include <stdlib.h>
-#include "../std_lib_facilities.h"
 
-class Point {
-public:
+#ifndef POINT_GUARD
+#define POINT_GUARD
+
+//typedef void (*Callback)(void*,void*);
+
+namespace Graph_lib {
+
+struct Point {
 	int x,y;
+	Point(int xx, int yy) : x(xx), y(yy) { }
+	Point() :x(0), y(0) { }
 
-	Point (void);
-	Point (int nx, int ny);
-
-	bool operator == (const Point &p) {
-		return x == p.x && y == p.y;
-	}
+//	Point& operator+=(Point d) { x+=d.x; y+=d.y; return *this; }
 };
 
+inline bool operator==(Point a, Point b) { return a.x==b.x && a.y==b.y; }
 
+inline bool operator!=(Point a, Point b) { return !(a==b); }
+
+
+}
 #endif
