@@ -84,8 +84,7 @@ void Client::getBoard()
 
 void Client::makeMove(int row, char col) //NOT TESTED
 {
-    write(connSock,string(row)+" "+string(col),sizeof(buffer));
-    getBoard()
+    write(connSock,string(col)+" "+string(row),sizeof(buffer));
 }
 
 void Client::startGame() //NOT TESTED
