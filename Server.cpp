@@ -167,11 +167,11 @@ void Server::handleMove(string move) {
     if(!moves.empty()) {
         Space newMove;
         if (diff == EASY)
-            newMove = ai.chooseMove(game,1,aiColor);
-        else if (diff == MEDIUM)
-            newMove = ai.chooseMove(game,3,aiColor);
-        else
             newMove = ai.chooseMove(game,5,aiColor);
+        else if (diff == MEDIUM)
+            newMove = ai.chooseMove(game,2,aiColor);
+        else
+            newMove = ai.chooseMove(game,1,aiColor);
         string s = "";
         switch(newMove.getColumn()) {
             case Column::a:
@@ -248,6 +248,7 @@ void Server::handleMove(string move) {
 bool Server::isValid(string command) {
     cout << command << endl;
     if (command.substr(0,4) == "UNDO" || 
+        command.substr(0,1) == ";" ||
         command.substr(0,7) == "DISPLAY" || 
         command.substr(0,4) == "EXIT" ||
         command.substr(0,4) == "EASY" ||
@@ -340,11 +341,11 @@ void Server::makeAIMove() {
     if(!moves.empty()) {
         Space newMove;
         if (diff == EASY)
-            newMove = ai.chooseMove(game,1,aiColor);
-        else if (diff == MEDIUM)
-            newMove = ai.chooseMove(game,3,aiColor);
-        else
             newMove = ai.chooseMove(game,5,aiColor);
+        else if (diff == MEDIUM)
+            newMove = ai.chooseMove(game,2,aiColor);
+        else
+            newMove = ai.chooseMove(game,1,aiColor);
         string s = "";
         switch(newMove.getColumn()) {
             case Column::a:
@@ -489,6 +490,10 @@ void Server::handleCommand() {
         game.undoMove();
         return;
     }
+
+    if (command.substr(0,1) == ";") {
+        makeAIMove();
+    }
 }
 
 void Server::getCommand() {
@@ -500,6 +505,10 @@ void Server::getCommand() {
 }
 
 bool Server::done() {
+    if(started && (game.showPossibleMoves(aiColor).size() + game.showPossibleMoves(playerColor).size()) == 0)
+        return true;
+    if (game.gameOver())
+        write(gameSock,";Game Over", 10);
     return (gameover || game.gameOver());
 }
 
@@ -507,10 +516,10 @@ int main(int argc, char *argv[])
 {
     Server server(argv[1]);
     server.waitForConnection();
-    while(!server.done()) {
+    do {
         server.getCommand();
         server.handleCommand();
-    }
+    } while(!server.done());
 
     return 0;
 }

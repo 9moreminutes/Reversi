@@ -41,19 +41,20 @@ Space AI::chooseMove(GameEngine game, int depth, Tile player) {
 	int bestval = -1000;
 	for (int i = 0 ; i < moves.size() ; ++i) {
 		game.makeMove(moves[i].getRow(), moves[i].getColumn(), player);
-		int tmp = minimax(game, depth-1, player);
+		int tmp = minimax(game, depth-1, player, player);
 		if (tmp > bestval) {
 			bestMove = moves[i];
 			bestval = tmp;
+			cout << "Value of " << moves[i].getColumn() << " " << moves[i].getRow() << ": " << tmp << endl;
 		}
 		game.undoMove();
 	}
     return bestMove;            
 }
 
-int AI::minimax(GameEngine game, int depth, Tile player) {
+int AI::minimax(GameEngine game, int depth, Tile player, Tile maxing) {
 	if (game.gameOver() || depth == 0){
-        return getValue(game, player);
+        return getValue(game, maxing);
     }
 
     vector<Space> moves = game.showPossibleMoves(player);
@@ -61,9 +62,10 @@ int AI::minimax(GameEngine game, int depth, Tile player) {
     	int bestval = -1000;
     	for (int i = 0 ; i < moves.size() ; ++i) {
 			game.makeMove(moves[i].getRow(), moves[i].getColumn(), player);
-			int tmp = minimax(game, depth-1, game.opposite(player));
+			int tmp = minimax(game, depth-1, game.opposite(player), maxing);
 			if (tmp > bestval) {
 				bestval = tmp;
+
 			}
 			game.undoMove();
 		}
@@ -73,7 +75,7 @@ int AI::minimax(GameEngine game, int depth, Tile player) {
     	int bestval = 1000;
     	for (int i = 0 ; i < moves.size() ; ++i) {
 			game.makeMove(moves[i].getRow(), moves[i].getColumn(), player);
-			int tmp = minimax(game, depth-1, game.opposite(player));
+			int tmp = minimax(game, depth-1, game.opposite(player), maxing);
 			if (tmp < bestval) {
 				bestval = tmp;
 			}
