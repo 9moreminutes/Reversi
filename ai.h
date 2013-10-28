@@ -24,7 +24,7 @@ public:
     }
     ~AI();
     int getValue(GameEngine game, Tile);
-    int minimax(GameEngine game, int depth, Tile);
+    int minimax(GameEngine game, int depth, Tile, Tile);
     Space chooseMove(GameEngine game, int depth, Tile);
     
     void changeTurn(Tile player);
