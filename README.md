@@ -43,3 +43,9 @@ next you need to start the client which is located in `/client/` by running
 `cd client; ./testing`
 
 the client will then automatically connect to the server and the game will be started. You can click the buttons to make moves (you're black) and click the difficulty menu to change difficulties.
+
+
+Development Log
+---------------
+
+To see a development log, look at the commit messages for this repository on github.com/cloudburst-/Reversi.
