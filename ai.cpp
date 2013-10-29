@@ -45,7 +45,6 @@ Space AI::chooseMove(GameEngine game, int depth, Tile player) {
 		if (tmp > bestval) {
 			bestMove = moves[i];
 			bestval = tmp;
-			cout << "Value of " << moves[i].getColumn() << " " << moves[i].getRow() << ": " << tmp << endl;
 		}
 		game.undoMove();
 	}

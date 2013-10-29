@@ -482,7 +482,7 @@ void Server::handleCommand() {
 
     if (command.substr(0,7) == "DISPLAY") {
         write(gameSock,game.displayBoard().c_str(),200);
-        write(gameSock,game.tallyPoints().c_str(),24);
+        //write(gameSock,game.tallyPoints().c_str(),24);
         return;
     }
 
